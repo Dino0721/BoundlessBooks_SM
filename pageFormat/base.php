@@ -3,7 +3,7 @@
 // For General Functions Here
 
 date_default_timezone_set('Asia/Kuala_Lumpur');
-//session_start();
+session_start();
 
 function is_get() {
     return $_SERVER['REQUEST_METHOD'] == 'GET';
@@ -49,12 +49,111 @@ function temp($key, $value = null) {
     }
 }
 
+function is_email($value) {
+    return filter_var($value, FILTER_VALIDATE_EMAIL) !== false;
+}
+
+// HTML Helpers
+
+// Encode HTML special characters
+function encode($value) {
+    return htmlentities($value);
+}
+
+// Generate <input type='text'>
+function html_text($key, $attr = '') {
+    $value = encode($GLOBALS[$key] ?? '');
+    echo "<input type='text' id='$key' name='$key' value='$value' $attr>";
+}
+
+// Generate <input type='password'>
+function html_password($key, $attr = '') {
+    $value = encode($GLOBALS[$key] ?? '');
+    echo "<input type='password' id='$key' name='$key' value='$value' $attr>";
+}
+
+// Generate <input type='number'>
+function html_number($key, $min = '', $max = '', $step = '', $attr = '') {
+    $value = encode($GLOBALS[$key] ?? '');
+    echo "<input type='number' id='$key' name='$key' value='$value'
+                 min='$min' max='$max' step='$step' $attr>";
+}
+
+// Generate <input type='search'>
+function html_search($key, $attr = '') {
+    $value = encode($GLOBALS[$key] ?? '');
+    echo "<input type='search' id='$key' name='$key' value='$value' $attr>";
+}
+
+// Generate <input type='radio'> list
+function html_radios($key, $items, $br = false) {
+    $value = encode($GLOBALS[$key] ?? '');
+    echo '<div>';
+    foreach ($items as $id => $text) {
+        $state = $id == $value ? 'checked' : '';
+        echo "<label><input type='radio' id='{$key}_$id' name='$key' value='$id' $state>$text</label>";
+        if ($br) {
+            echo '<br>';
+        }
+    }
+    echo '</div>';
+}
+
+// Generate <select>
+function html_select($key, $items, $default = '- Select One -', $attr = '') {
+    $value = encode($GLOBALS[$key] ?? '');
+    echo "<select id='$key' name='$key' $attr>";
+    if ($default !== null) {
+        echo "<option value=''>$default</option>";
+    }
+    foreach ($items as $id => $text) {
+        $state = $id == $value ? 'selected' : '';
+        echo "<option value='$id' $state>$text</option>";
+    }
+    echo '</select>';
+}
+
+// Generate <input type='file'>
+function html_file($key, $accept = '', $attr = '') {
+    echo "<input type='file' id='$key' name='$key' accept='$accept' $attr>";
+}
+
+// Generate table headers <th>
+function table_headers($fields, $sort, $dir, $href = '') {
+    foreach ($fields as $k => $v) {
+        $d = 'asc'; // Default direction
+        $c = '';    // Default class
+        
+        if ($k == $sort) {
+            $d = $dir == 'asc' ? 'desc' : 'asc';
+            $c = $dir;
+        }
+
+        echo "<th><a href='?sort=$k&dir=$d&$href' class='$c'>$v</a></th>";
+    }
+}
+
+// Global error array
+$_err = [];
+
+// Generate <span class='err'>
+function err($key) {
+    global $_err;
+    if ($_err[$key] ?? false) {
+        echo "<span class='err'>$_err[$key]</span>";
+    }
+    else {
+        echo '<span></span>';
+    }
+}
+
 // Security
 
 $_user = $_SESSION['user'] ?? null;
 
 // User login
 function login($user, $url = '/') {
+    session_start();
     $_SESSION['user'] = $user;
     redirect($url);
 }
@@ -77,10 +176,26 @@ function auth(...$roles) {
             return;
         }
     }
-    redirect('/login.php');
+    redirect('../loginSide/login.php');
 }
 
 // Database setup
 
 // Global PDO Object
 $_db = new PDO('mysql:dbname=booksdb', 'root', '', [PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ,]);
+
+// Is unique?
+function is_unique($value, $table, $field) {
+    global $_db;
+    $stm = $_db->prepare("SELECT COUNT(*) FROM $table WHERE $field = ?");
+    $stm->execute([$value]);
+    return $stm->fetchColumn() == 0;
+}
+
+// Is exists?
+function is_exists($value, $table, $field) {
+    global $_db;
+    $stm = $_db->prepare("SELECT COUNT(*) FROM $table WHERE $field = ?");
+    $stm->execute([$value]);
+    return $stm->fetchColumn() > 0;
+}
