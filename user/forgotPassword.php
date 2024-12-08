@@ -35,13 +35,13 @@ if (is_post()) {
             $mail->isSMTP();
             $mail->Host = 'smtp.gmail.com';
             $mail->SMTPAuth = true;
-            $mail->Username = 'tequilaguey777@gmail.com'; // Your Gmail address
+            $mail->Username = '123@gmail.com'; // Your Gmail address
             $mail->Password = '654321'; // Your Gmail app password
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
             $mail->Port = 587;
 
             // Email details
-            $mail->setFrom('tequilaguey777@gmail.com', 'BoundlessBooks');
+            $mail->setFrom('123@gmail.com', 'BoundlessBooks');
             $mail->addAddress($email); // Recipient's email
             $mail->Subject = 'Password Reset';
             $mail->Body = "Click this link to reset your password: $resetLink";
