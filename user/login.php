@@ -1,12 +1,10 @@
 <?php
 
 require '../pageFormat/base.php';
+include '../pageFormat/head.php';
 
 // authenticating users
 // auth('Admin');
-// if (is_post()) {
-//     echo "Form submitted via POST"; // Check if this message appears
-// }
 
 if (is_post()) {
     // $username = req('username');
@@ -32,38 +30,16 @@ if (is_post()) {
 
     // Login the user
     if (!$_err) {
-        
-        
         $stm = $_db->prepare('SELECT * FROM user WHERE email = ? AND password = SHA1(?)');
-        // if (!$stm) {
-        //     echo "Query preparation failed: " . implode(' ', $_db->errorInfo());
-        //     exit();
-        // } else {
-        //     echo "Query preparation succeeded.<br>";
-        // }
-        $stm->execute([$email, $password]);
-        // $result = 
-        // if (!$result) {
-        //     echo "Query execution failed: " . implode(' ', $_db->errorInfo());
-        //     exit();
-        // } else {
-        //     echo "Query executed successfully.<br>";
-        // }
-
-        $u = $stm->fetch();
-        // if ($u) {
-        //     echo "User found: ";
-        //     print_r($u);
-        //     exit(); // Remove this after confirming results
-        // } else {
-        //     echo "No user matched the provided credentials.<br>";
-        //     $_err['password'] = 'Not matched';
-        // }
         
-        if ($u) {
+        $stm->execute([$email, $password]);
+
+        $user = $stm->fetch();
+        
+        if ($user) {
             temp('info', 'Login successfully');
-            print_r($u);
-            login($u, '../productCatalog/productCatalog.php');
+            print_r($user);
+            login($user, '../productCatalog/productCatalog.php');
             // redirect('../productCatalog/productCatalog.php');
             // header("Location: ../productCatalog/product.php");
             // exit();
@@ -78,7 +54,7 @@ if (is_post()) {
 // include '../pageFormat/head.php'
 ?>
 
-<form action="login.php" method="post">
+<form action="login.php" method="post" id="login-form">
     <h1>Login</h1>
     <label for="email">Email</label><br>
     <?= html_text('email', 'maxlength="100"') ?>
@@ -89,7 +65,9 @@ if (is_post()) {
     <?= err('password') ?><br>
 
     <button type="submit">Login</button>
-    <button type="button" id="sign-up-btn">Sign Up</button>
+    <button type="button" id="sign-up-btn">Sign Up</button><br>
+    <button type="button" id="reset-btn">Reset</button>
+    <p><a href="forgotPassword.php">Forgot Password</a></p>
 </form>
 
 <?php

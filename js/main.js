@@ -10,6 +10,15 @@ document.getElementById('sign-up-btn').addEventListener('click', function() {
     }, 10); // Adding a slight delay to allow display change
 });
 
+document.getElementById('reset-btn').addEventListener('click', function() {
+    const form = document.getElementById('login-form');
+    
+    form.querySelectorAll('input').forEach(input => input.value = '');
+    
+    const errorMessages = form.querySelectorAll('.error');
+    errorMessages.forEach(error => error.textContent = '');
+});
+
 
 // ============================================================================
 // Page Load (jQuery)

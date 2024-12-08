@@ -49,3 +49,37 @@ if (file_exists('setup_completed.flag')) {
 ?>
 <!-- TODO -->
 <a href="customerSide/home/home.php">Home</a> 
+
+
+
+-------------------------------------------------------------
+---------------------- DEBUG LINES --------------------------
+-------------------------------------------------------------
+
+// if (!$stm) {
+        //     echo "Query preparation failed: " . implode(' ', $_db->errorInfo());
+        //     exit();
+        // } else {
+        //     echo "Query preparation succeeded.<br>";
+        // }
+
+        // $result = 
+        // if (!$result) {
+        //     echo "Query execution failed: " . implode(' ', $_db->errorInfo());
+        //     exit();
+        // } else {
+        //     echo "Query executed successfully.<br>";
+        // }
+
+        // if ($u) {
+        //     echo "User found: ";
+        //     print_r($u);
+        //     exit(); // Remove this after confirming results
+        // } else {
+        //     echo "No user matched the provided credentials.<br>";
+        //     $_err['password'] = 'Not matched';
+        // }
+
+        // if (is_post()) {
+//     echo "Form submitted via POST"; // Check if this message appears
+// }
