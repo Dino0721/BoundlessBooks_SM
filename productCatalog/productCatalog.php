@@ -1,6 +1,6 @@
 <?php
 $_title = 'Product Catalog';
-include 'head.html';
+include '../pageFormat/head.php';
 ?>
 
 <!DOCTYPE html>
@@ -44,5 +44,5 @@ include 'head.html';
 </html>
 
 <?php
-include 'foot.html';
+include '../pageFormat/footer.php';
 ?>
