@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS cart_item (
   book_id int(20) NOT NULL,
   quantity int(10) NOT NULL,
   purchase_date date DEFAULT NULL,
-  purchase_time bigint DEFAULT NULL,
+  purchase_time time DEFAULT NULL,
   PRIMARY KEY (cart_id, book_id),
   FOREIGN KEY (cart_id) REFERENCES cart(cart_id),
   FOREIGN KEY (book_id) REFERENCES book_item(book_id)
