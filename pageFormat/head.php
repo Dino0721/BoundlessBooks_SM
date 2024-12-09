@@ -7,6 +7,7 @@ require_once 'base.php';
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,6 +16,7 @@ require_once 'base.php';
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="/js/main.js"></script>
 </head>
+
 <body>
     <!-- Flash message -->
     <div id="info"><?= temp('info') ?></div>
@@ -23,7 +25,8 @@ require_once 'base.php';
         <h1><a href="/">BoundlessBooks</a></h1>
         <!-- redirect('../loginSide/login.php') -->
         <a href="../user/login.php">Login</a>
-        
+        <a href="../productCatalog/productCatalog.php">Product Catalog</a>
+
         <!-- TODO
         <?php if (1): ?>
             <div>
@@ -65,4 +68,3 @@ require_once 'base.php';
 
     <main>
         <!-- <h1><?= $_title ?? 'Untitled' ?></h1> -->
-
