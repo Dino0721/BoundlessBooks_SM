@@ -26,6 +26,15 @@ require_once 'base.php';
         <!-- redirect('../loginSide/login.php') -->
         <a href="../user/login.php">Login</a>
         <a href="../productCatalog/productCatalog.php">Product Catalog</a>
+        <a href="../productCatalog/manageBooks.php" class="btn">
+            Manage Books
+        </a>
+        <!-- <?php if ($isAdmin): ?> -->
+        <!-- <a href="manageBooks.php" class="btn" style="display: inline-block; margin-bottom: 20px; padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px;">
+            Manage Books
+        </a> -->
+
+        <!-- <?php endif; ?> -->
 
         <!-- TODO
         <?php if (1): ?>
