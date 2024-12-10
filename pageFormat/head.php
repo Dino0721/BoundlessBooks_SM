@@ -15,36 +15,35 @@ require_once 'base.php';
     <link rel="stylesheet" href="/css/main.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="/js/main.js"></script>
+    <script>
+        // Highlight the active menu item
+        $(document).ready(function() {
+            $('.header__a').each(function() {
+                if (this.href === window.location.href) {
+                    $(this).addClass('active'); // Add a class for styling
+                }
+            });
+        });
+    </script>
 </head>
 
 <body>
     <!-- Flash message -->
     <div id="info"><?= temp('info') ?></div>
 
-    <header>
-        <h1><a href="/">BoundlessBooks</a></h1>
 
-        <nav>
-            <!-- redirect('../loginSide/login.php') -->
-            <a href="../user/login.php">Login</a>
-            <a href="../productCatalog/productCatalog.php">Product Catalog</a>
-            <a href="../productCatalog/manageBooks.php" class="btn">
-                Manage Books
+    <header class="header">
+        <h1 class="header__logo">
+            <a href="index.php">BoundlessBooks
+                <!-- <img src="" alt="Logo"> -->
             </a>
-            <!-- <?php if ($isAdmin): ?> -->
-            <!-- <a href="manageBooks.php" class="btn" style="display: inline-block; margin-bottom: 20px; padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px;">
-                Manage Books
-            </a> -->
-            <!-- <?php endif; ?> -->
-
-            <!-- TODO
-            <?php if (1): ?>
-                <div>
-                    <?= 0 ?><br>
-                    <?= 0 ?>
-                </div>
-                <img src="/photos/ alt="???what image pls mention"<?= '0.jpg' ?>">
-            <?php endif ?> -->
+        </h1>
+        <nav class="header__nav">
+            <ul class="header__ul">
+                <?= createNavItem("../productCatalog/productCatalog.php", "Product Catalog"); ?>
+                <?= createNavItem("../productCatalog/manageBooks.php", "Manage Books"); ?>
+                <?= createNavItem("../user/login.php", "Login"); ?>
+            </ul>
         </nav>
     </header>
 

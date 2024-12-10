@@ -14,13 +14,22 @@ body, input, button, textarea, select {
 }
 
 body {
+    /* background-image: 
+        linear-gradient(to right,
+        hsl(220deg 13.04% 90.98%), 
+        hsl(217.89deg 10.61% 64.9%),
+        hsl(215deg 13.79% 34.12%)); */
+    min-block-size: 100vb;
+    font-size: 1.4rem;
+    line-height: 1.5;
+    /* color: hsl(0deg 0% 90%); */
     margin: 0;
     height: auto;
     display: grid;
     grid: auto auto 1fr auto / auto;
 }
 
-header {
+/* header {
     padding: 20px 50px;
     background: #ccc;
 }
@@ -34,9 +43,71 @@ header h1 {
 header a {
     color: inherit;
     text-decoration: none;
+} */
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-block: 1.8rem;
+    padding-inline: 3rem;
+    margin: 2rem;
+    border-radius: 0.5rem;
+    background-color: hsl(220.91deg 39.29% 10.98% / 50%);
 }
 
-nav {
+.header__logo a {
+    color: hsl(220deg 13.04% 90.98%);
+    text-decoration: none;
+}
+
+/* .header__img {
+    display: block;
+} */
+
+.header__ul {
+    padding: 0;
+    margin: 0;
+    display: flex;
+    gap: 1rem;
+    list-style: none;
+}
+
+.header__a {
+    display: block;
+    padding-block: 0.6rem;
+    padding-inline: 1.5rem;
+    color: hsl(220deg 13.04% 90.98% / 70%);
+    background: hsl(217.89deg 10.61% 20.9% / 70%);
+    text-decoration: none;
+    transition: color 0.2s ease-in-out;
+    border-radius: 0.5rem;
+}
+
+.header__a:hover {
+    color: hsl(220deg 13.04% 90.98% / 95%);
+}
+
+.active {
+    font-weight: bold;
+    color: hsl(220deg 13.04% 90.98% / 95%);
+}
+
+
+@media screen and (max-width: 1120px ) {
+    .header {
+        padding-block: 2rem;
+        flex-direction: column;
+    }
+    .header__ul {
+        margin-block-end:  0;
+        margin-block-start: 1rem;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
+ 
+/* nav {
     padding: 0 50px;
     background: #999;
     display: flex;
@@ -52,7 +123,7 @@ nav a {
 
 nav a:hover {
     background: #333;
-}
+} */
 
 main {
     padding: 20px 50px;
