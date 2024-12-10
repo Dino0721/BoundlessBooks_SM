@@ -1,8 +1,8 @@
 <?php
 // Database connection settings
 $host = "localhost";
-$username = "root"; 
-$password = "";   
+$username = "root";
+$password = "";
 
 // Database name
 $database = "ebookDB";
