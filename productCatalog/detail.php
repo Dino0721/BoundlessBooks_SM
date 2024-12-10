@@ -42,15 +42,17 @@ try {
 </head>
 
 <body>
-    <h1><?= htmlspecialchars($book['book_name']) ?></h1>
-    <p><?= htmlspecialchars($book['book_desc']) ?></p>
-    <p>Price: $<?= number_format($book['book_price'], 2) ?></p>
+    <div class="product-detail">
+        <h1><?= htmlspecialchars($book['book_name']) ?></h1>
+        <p><?= htmlspecialchars($book['book_desc']) ?></p>
+        <p class="price">Price: $<?= number_format($book['book_price'], 2) ?></p>
 
-    <?php if ($book['book_status'] === 'DISABLED'): ?>
-        <p style="color: red;">This book is currently unavailable.</p>
-    <?php endif; ?>
+        <?php if ($book['book_status'] === 'DISABLED'): ?>
+            <p class="unavailable">This book is currently unavailable.</p>
+        <?php endif; ?>
 
-    <a href="<?= $_SERVER['HTTP_REFERER'] ?? 'index.php' ?>">Back to Listing</a>
+        <a href="<?= $_SERVER['HTTP_REFERER'] ?? 'index.php' ?>">Back to Listing</a>
+    </div>
 </body>
 
 </html>
