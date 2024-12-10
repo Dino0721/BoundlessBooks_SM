@@ -1,6 +1,6 @@
 <?php
 $_title = 'Product Catalog';
-include '../pageFormat/base.php';
+require_once '../pageFormat/base.php';
 include '../pageFormat/head.php';
 
 // $_title = 'Product Catalog';
@@ -50,17 +50,33 @@ try {
 <body>
     <main>
         <!-- Search Form -->
-        <form method="GET" action="productCatalog.php">
-            <input type="text" name="search" placeholder="Search products..." value="<?= htmlspecialchars($search) ?>">
-            <button type="submit">Search</button>
+        <form method="GET" action="productCatalog.php" class="search-form">
+            <input
+                type="text"
+                name="search"
+                placeholder="Search products..."
+                value="<?= htmlspecialchars($search) ?>"
+                class="search-input">
+            <button type="submit" class="search-button">Search</button>
         </form>
         <!-- Filter buttons -->
-        <button class="toggle-books" onclick="window.location.href='productCatalog.php?show_all=yes'">Show All Books</button>
-        <button class="toggle-books" onclick="window.location.href='productCatalog.php?show_all=no'">Show Available Books Only</button>
-        <!-- <button class="toggle-books" data-show="all">Show All Books</button>
-        <button class="toggle-books" data-show="available">Show Available Books Only</button> -->
+        <div class="filter-buttons">
+            <button
+                class="toggle-books"
+                id="show-all-books"
+                onclick="window.location.href='productCatalog.php?show_all=yes'">
+                Show All Books
+            </button>
+            <button
+                class="toggle-books"
+                id="show-available-books"
+                onclick="window.location.href='productCatalog.php?show_all=no'">
+                Show Available Books Only
+            </button>
+        </div>
 
-        <p>Total Books: <?= $bookCount ?></p>
+
+        <p class="book-count">Total Books: <span><?= $bookCount ?></span></p>
         <!-- Product Listing -->
         <div class="product-list">
             <?php if ($books): ?>
@@ -79,24 +95,22 @@ try {
     </main>
     <script>
         $(document).ready(function() {
+            // Get current "show_all" state
+            let showAll = '<?= $showAll ?>';
+
+            // If 'Show All Books' is active
+            if (showAll === 'yes') {
+                $('#show-all-books').addClass('active');
+                $('#show-available-books').removeClass('active');
+            } else {
+                $('#show-available-books').addClass('active');
+                $('#show-all-books').removeClass('active');
+            }
+
             // Toggle between showing all books or only available books
             $(".toggle-books").click(function() {
-                var filter = $(this).data("show");
-
-                if (filter === "all") {
-                    // Show all books
-                    $(".product-item").show();
-                } else if (filter === "available") {
-                    // Show only books with AVAILABLE status
-                    $(".product-item").each(function() {
-                        var status = $(this).data("status");
-                        if (status === "AVAILABLE") {
-                            $(this).show(); // Show available books
-                        } else {
-                            $(this).hide(); // Hide disabled books
-                        }
-                    });
-                }
+                $(".toggle-books").removeClass("active"); // Remove 'active' class from all buttons
+                $(this).addClass("active"); // Add 'active' class to clicked button
             });
         });
     </script>
@@ -106,5 +120,5 @@ try {
 </html>
 
 <?php
-include '../pageFormat/footer.php';
+// include '../pageFormat/footer.php';
 ?>
