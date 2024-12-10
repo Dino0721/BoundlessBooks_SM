@@ -190,6 +190,76 @@ button:hover {
 .product-item:hover a {
     color: #fff;
 }
+.product-item .status {
+    text-align: center;
+    font-weight: bold;
+    padding: 5px;
+    margin-top: 10px;
+    border-radius: 5px;
+    color: #fff;
+}
+
+.product-item .status.available {
+    background-color: #28a745; /* Green for Available */
+}
+
+.product-item .status.disabled {
+    background-color: #dc3545; /* Red for Unavailable */
+}
+
+/* Start Product detail */
+.product-detail {
+    margin: auto;
+    text-align: center;
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    width: 90%;
+}
+
+.product-detail h1 {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.product-detail p {
+    font-size: 1rem;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+.product-detail p.price {
+    font-size: 1.2rem;
+    color: #000;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.product-detail p.unavailable {
+    color: red;
+    font-size: 1rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.product-detail a {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 10px 20px;
+    color: #fff;
+    background: #007bff;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background 0.3s;
+}
+
+.product-detail a:hover {
+    background: #0056b3;
+}
+/* End Product detail */
 
 /* General container for alignment */
 .search-filter-container {

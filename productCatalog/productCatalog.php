@@ -8,12 +8,16 @@ $search = isset($_GET['search']) ? trim($_GET['search']) : null;
 $showAll = isset($_GET['show_all']) ? $_GET['show_all'] : false;
 
 $sql = "SELECT * FROM book_item WHERE book_status = 'AVAILABLE'";
+
 if ($search) {
-    $sql .= " AND book_name LIKE :search";
+    // Search all books regardless of status
+    $sql = "SELECT * FROM book_item WHERE book_name LIKE :search";
 }
+
 if ($showAll == 'yes') {
     $sql = "SELECT * FROM book_item"; // Show all books if "Show All" is clicked
 }
+
 
 try {
     // Use the global PDO object `$_db` from the base script
@@ -87,6 +91,9 @@ try {
                         <h2><?= htmlspecialchars($book->book_name) ?></h2>
                         <p><?= htmlspecialchars($book->book_desc) ?></p>
                         <p>Price: $<?= number_format($book->book_price, 2) ?></p>
+                        <p class="status <?= strtolower(htmlspecialchars($book->book_status)) ?>">
+                            <?= htmlspecialchars($book->book_status) === 'AVAILABLE' ? 'Available' : 'Unavailable' ?>
+                        </p>
                         <!-- <a href="detail.php?book_id=<?= $book->book_id ?>">View Details</a> -->
                     </div>
                 <?php endforeach; ?>
