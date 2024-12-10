@@ -244,7 +244,7 @@ button:hover {
 .toggle-books {
     padding: 10px 20px;
     font-size: 16px;
-    color: #fff;
+    color: #000;
     background-color: #28a745;
     border: none;
     border-radius: 5px;
@@ -294,3 +294,236 @@ button:hover {
 }
 
 /* End Product Catalog */
+
+/* Start Form Section Styling */
+.form-section, .table-section {
+    margin-bottom: 40px;
+}
+
+.manage-book-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.input-field, .textarea-field, .select-field {
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.textarea-field {
+    height: 100px;
+    resize: vertical;
+}
+
+.submit-button {
+    background-color: #4CAF50;
+    color: white;
+    font-size: 1.1rem;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.submit-button:hover {
+    background-color: #45a049;
+}
+
+/* Table Section Styling */
+.book-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.book-table th, .book-table td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+.book-table th {
+    background-color: #f4f4f4;
+}
+
+.action-button {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.action-button:hover {
+    text-decoration: underline;
+}
+
+.delete-button {
+    color: #e74c3c;
+}
+
+.delete-button:hover {
+    text-decoration: underline;
+}
+
+.error-message {
+    color: red;
+    font-weight: bold;
+    text-align: center;
+}
+
+.back-link {
+    display: inline-block;
+    margin-top: 20px;
+    text-decoration: none;
+    color: #007bff;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}
+/* End Form Section Styling */
+
+/* Start Style for the Add Book Container */
+.add-book-container {
+    background-color: #f0f0f0;
+    padding: 20px;
+    margin-bottom: 30px;
+    border-radius: 8px;
+}
+
+/* Style for the Add Book Form */
+.add-book-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: space-between;
+}
+
+/* Styling form fields horizontally */
+.add-book-container {
+    background-color: #f0f0f0;
+    padding: 20px;
+    margin-bottom: 30px;
+    border-radius: 8px;
+}
+
+/* Style for the Add Book Form */
+.add-book-form {
+    display: inline-flex;
+    gap: 20px;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+}
+
+/* Label and Input Styling */
+.add-book-form label {
+    width: 150px; /* Set a fixed width for the label */
+    margin-bottom: 8px;
+    display: inline-block; /* Make label an inline block */
+}
+
+.add-book-form input,
+.add-book-form select,
+.add-book-form textarea {
+    width: calc(100% - 160px); /* Adjust width to fill the remaining space */
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* Make the description textarea use full available width */
+.add-book-form textarea {
+    height: 100px;
+}
+
+/* Button Style */
+.add-book-form button {
+    padding: 12px 20px; /* Adjust padding for a larger button */
+    background-color: #007bff; /* Blue background color */
+    color: white; /* White text color */
+    border: none;
+    border-radius: 5px; /* Rounded corners */
+    font-size: 16px; /* Adjust font size */
+    font-weight: bold; /* Make the text bold */
+    cursor: pointer; /* Pointer cursor on hover */
+    text-transform: uppercase; /* Transform text to uppercase */
+    transition: background-color 0.3s ease; /* Smooth background change on hover */
+}
+
+.add-book-form button:hover {
+    background-color: #45a049;
+}
+
+/* Optional: Style for form fields in a column on smaller screens */
+@media (max-width: 768px) {
+    .add-book-form label,
+    .add-book-form input,
+    .add-book-form select,
+    .add-book-form textarea {
+        width: 100%; /* Stack vertically on small screens */
+    }
+}
+/* End Style for the Add Book Container */
+
+/* Start Edit Book Form Styling */
+.alert-message {
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.alert-message.error {
+    background-color: #f44336;
+}
+.edit-book-form {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.edit-book-form label {
+    display: block;
+    margin: 10px 0 5px;
+    font-weight: bold;
+}
+
+.edit-book-form input, .edit-book-form textarea, .edit-book-form select {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.edit-book-form button {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.edit-book-form button:hover {
+    background-color: #45a049;
+}
+
+.edit-book-form a {
+    color: #007BFF;
+    text-decoration: none;
+}
+
+.edit-book-form a:hover {
+    text-decoration: underline;
+}
+/* End Edit Book Form Styling */
