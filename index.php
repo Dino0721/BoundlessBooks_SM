@@ -51,7 +51,7 @@ try {
     echo "<p>All SQL commands executed successfully.</p>";
 
     // Display a link to the home page
-    echo '<p><a href="cartSide/addCart.php">Go to Home Page</a></p>';
+    echo '<p><a href="landingPage.php">Go to Home Page</a></p>';
 } catch (Exception $e) {
     echo "<p>Error: " . $e->getMessage() . "</p>";
 } finally {
@@ -65,7 +65,7 @@ require 'pageFormat/base.php';
 $_title = 'BoundlessBooks';
 // include 'pageFormat/head.php';
 // require 'loginSide/login.php';
-include 'landingPage.php';
+// include 'landingPage.php';
 ?>
 
 <?php
