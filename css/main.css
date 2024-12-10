@@ -155,34 +155,40 @@ button:hover {
 }
 
 .product-item {
-    background: #fff;
+    background-color: #f9f9f9;
+    padding: 15px;
+    margin: 10px;
     border: 1px solid #ddd;
-    border-radius: 5px;
-    padding: 20px;
-    width: 300px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     text-align: center;
+    cursor: pointer; /* Make it clear the div is clickable */
 }
 
-.product-item h2 {
-    font-size: 20px;
-    color: #333;
-}
-
-.product-item p {
-    font-size: 14px;
-    color: #666;
-}
-
+.product-item h2,
+.product-item p,
 .product-item a {
-    display: inline-block;
-    margin-top: 10px;
+    color: #333;
     text-decoration: none;
-    color: #007BFF;
+    transition: all 0.3s ease;
 }
 
 .product-item a:hover {
-    color: #0056b3;
+    text-decoration: underline;
+}
+
+.product-item:hover {
+    background-color: #007bff;
+    color: #fff;
+    transform: scale(1.05);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.product-item:hover h2,
+.product-item:hover p,
+.product-item:hover a {
+    color: #fff;
 }
 
 /* General container for alignment */

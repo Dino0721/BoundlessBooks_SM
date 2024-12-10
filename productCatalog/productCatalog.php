@@ -81,17 +81,20 @@ try {
         <div class="product-list">
             <?php if ($books): ?>
                 <?php foreach ($books as $book): ?>
-                    <div class="product-item" data-status="<?= htmlspecialchars($book->book_status) ?>">
+                    <div class="product-item"
+                        data-url="detail.php?book_id=<?= $book->book_id ?>"
+                        data-status="<?= htmlspecialchars($book->book_status) ?>">
                         <h2><?= htmlspecialchars($book->book_name) ?></h2>
                         <p><?= htmlspecialchars($book->book_desc) ?></p>
                         <p>Price: $<?= number_format($book->book_price, 2) ?></p>
-                        <a href="detail.php?book_id=<?= $book->book_id ?>">View Details</a>
+                        <!-- <a href="detail.php?book_id=<?= $book->book_id ?>">View Details</a> -->
                     </div>
                 <?php endforeach; ?>
             <?php else: ?>
                 <p>No products found!</p>
             <?php endif; ?>
         </div>
+
     </main>
     <script>
         $(document).ready(function() {
@@ -112,6 +115,18 @@ try {
                 $(".toggle-books").removeClass("active"); // Remove 'active' class from all buttons
                 $(this).addClass("active"); // Add 'active' class to clicked button
             });
+        });
+        $(document).ready(function() {
+            // Make entire product-item div clickable
+            $(".product-item").on("click", function() {
+                // Get the URL from the data-url attribute
+                const url = $(this).data("url");
+                // Navigate to the URL
+                window.location.href = url;
+            });
+
+            // Optional: Change the cursor to a pointer for better UX
+            $(".product-item").css("cursor", "pointer");
         });
     </script>
     <script src="../js/main.js"></script>
