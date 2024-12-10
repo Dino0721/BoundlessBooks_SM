@@ -182,7 +182,7 @@ function auth(...$roles) {
 // Database setup
 
 // Global PDO Object
-$_db = new PDO('mysql:dbname=booksdb', 'root', '', [PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ,]);
+$_db = new PDO('mysql:dbname=ebookdb', 'root', '', [PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ,]);
 
 // Is unique?
 function is_unique($value, $table, $field) {
