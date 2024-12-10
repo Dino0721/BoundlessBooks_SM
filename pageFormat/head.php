@@ -7,6 +7,7 @@ require_once 'base.php';
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,23 +16,36 @@ require_once 'base.php';
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="/js/main.js"></script>
 </head>
+
 <body>
     <!-- Flash message -->
     <div id="info"><?= temp('info') ?></div>
 
     <header>
         <h1><a href="/">BoundlessBooks</a></h1>
-        <!-- redirect('../loginSide/login.php') -->
-        <a href="../user/login.php">Login</a>
-        
-        <!-- TODO
-        <?php if (1): ?>
-            <div>
-                <?= 0 ?><br>
-                <?= 0 ?>
-            </div>
-            <img src="/photos/<?= '0.jpg' ?>">
-        <?php endif ?> -->
+
+        <nav>
+            <!-- redirect('../loginSide/login.php') -->
+            <a href="../user/login.php">Login</a>
+            <a href="../productCatalog/productCatalog.php">Product Catalog</a>
+            <a href="../productCatalog/manageBooks.php" class="btn">
+                Manage Books
+            </a>
+            <!-- <?php if ($isAdmin): ?> -->
+            <!-- <a href="manageBooks.php" class="btn" style="display: inline-block; margin-bottom: 20px; padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px;">
+                Manage Books
+            </a> -->
+            <!-- <?php endif; ?> -->
+
+            <!-- TODO
+            <?php if (1): ?>
+                <div>
+                    <?= 0 ?><br>
+                    <?= 0 ?>
+                </div>
+                <img src="/photos/ alt="???what image pls mention"<?= '0.jpg' ?>">
+            <?php endif ?> -->
+        </nav>
     </header>
 
     <nav>
@@ -65,4 +79,3 @@ require_once 'base.php';
 
     <main>
         <!-- <h1><?= $_title ?? 'Untitled' ?></h1> -->
-
