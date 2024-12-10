@@ -28,20 +28,20 @@ if (is_post()) {
         $stm = $_db->prepare('UPDATE user SET reset_token = ?, token_expiry = ? WHERE email = ?');
         $stm->execute([$token, $expiry, $email]);
 
-        $resetLink = "http://yourwebsite.com/resetPassword.php?token=$token";
+        $resetLink = "localhost:8000/user/changePassword.php?reset_token=$token";
 
         $mail = new PHPMailer(true);
         try {
             $mail->isSMTP();
             $mail->Host = 'smtp.gmail.com';
             $mail->SMTPAuth = true;
-            $mail->Username = '123@gmail.com'; // Your Gmail address
-            $mail->Password = '654321'; // Your Gmail app password
+            $mail->Username = 'tequilaguey777@gmail.com'; // Your Gmail address
+            $mail->Password = 'dbkhijmymjdaohkj '; // Your Gmail app password
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
             $mail->Port = 587;
 
             // Email details
-            $mail->setFrom('123@gmail.com', 'BoundlessBooks');
+            $mail->setFrom($mail->Username, 'BoundlessBooks');
             $mail->addAddress($email); // Recipient's email
             $mail->Subject = 'Password Reset';
             $mail->Body = "Click this link to reset your password: $resetLink";
@@ -56,7 +56,6 @@ if (is_post()) {
         $_err['email'] = 'Email not found';
     }
 }
-
 ?>
 
 <form action="forgotPassword.php" method="post">

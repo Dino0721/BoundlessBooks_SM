@@ -1,7 +1,6 @@
 <?php
 
 // For General Functions Here
-
 date_default_timezone_set('Asia/Kuala_Lumpur');
 session_start();
 
@@ -148,7 +147,6 @@ function err($key) {
 }
 
 // Security
-
 $_user = $_SESSION['user'] ?? null;
 
 // User login
@@ -183,6 +181,7 @@ function auth(...$roles) {
 
 // Global PDO Object
 $_db = new PDO('mysql:dbname=booksdb', 'root', '', [PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ,]);
+$_db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 // Is unique?
 function is_unique($value, $table, $field) {
