@@ -1,3 +1,4 @@
+testig low mssage
 <?php
 // Check if setup has already been completed
 if (file_exists('setup_completed.flag')) {
