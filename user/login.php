@@ -24,19 +24,16 @@ if (is_post()) {
         }
 
         if (empty($_err)) {
-            $stm = $_db->prepare('SELECT * FROM user WHERE email = ? AND password = SHA1(?)');
-            $stm->execute([$email, $password]);
+            $stm = $_db->prepare('SELECT * FROM user WHERE email = ?');
+            $stm->execute([$email]);
 
-            $user = $stm->fetch();
-            if ($user) {
-                if (password_verify($password, $user['password'])) {
-                    session_start();
-                    $_SESSION['user_id'] = $user['user_id'];
-                    $_SESSION['username'] = $user['username'];
-                    temp('info', 'Login successful.');
-                    login($user, '../productCatalog/productCatalog.php');
-                    exit();
-                }
+            $user = $stm->fetch(PDO::FETCH_ASSOC);
+            if ($user && password_verify($password, $user['password'])) {
+                session_start();
+                $_SESSION['user_id'] = $user['user_id'];
+                temp('info', 'Login successful.');
+                login($user, '../productCatalog/productCatalog.php');
+                exit();
             } else {
                 $_err['password'] = 'Email or password is incorrect.';
             }
@@ -45,6 +42,7 @@ if (is_post()) {
         // Handle Sign-Up Form Submission
         $email = req('email');
         $password = req('password');
+        $confirm_password = req('confirm_password') ?? '';
 
         // Email Validation
         if ($email == '') {
@@ -67,12 +65,18 @@ if (is_post()) {
             $_err['password'] = 'Password must be at least 6 characters.';
         }
 
-        if (empty($_err)) {
-            $hashed_password = sha1($password);
-            $role = 'Member'; // Default role
+        // Confirm Password Validation
+        if ($confirm_password == '') {
+            $_err['confirm_password'] = 'Please confirm your password.';
+        } else if ($password !== $confirm_password) {
+            $_err['confirm_password'] = 'Passwords do not match.';
+        }
 
-            $stm = $_db->prepare('INSERT INTO user (username, email, password, phone_number, role) VALUES (?, ?, ?, ?, ?)');
-            if ($stm->execute(['New User', $email, $hashed_password, '', $role])) {
+        if (empty($_err)) {
+            $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+
+            $stm = $_db->prepare('INSERT INTO user (email, password, phone_number) VALUES (?, ?, ?)');
+            if ($stm->execute([$email, $hashed_password, ''])) {
                 temp('info', 'Sign-up successful.');
                 login(['email' => $email, 'role' => $role], '../productCatalog/productCatalog.php');
                 exit();
@@ -115,6 +119,10 @@ if (is_post()) {
     <label for="password">Password</label><br>
     <?= html_password('password', 'maxlength="100"') ?>
     <?= err('password') ?><br>
+
+    <label for="confirm_password">Confirm Password</label><br>
+    <?= html_password('confirm_password', 'maxlength="100"') ?>
+    <?= err('confirm_password') ?><br>
 
     <button type="submit">Sign Up</button>
     <?= isset($_err['general']) ? '<p>' . $_err['general'] . '</p>' : '' ?>
