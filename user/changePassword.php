@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             temp('error', 'Password must be at least 6 characters long.');
         } else {
             if ($token && $newPassword) {
-                $hashedPassword = password_hash($newPassword, PASSWORD_BCRYPT);
+                $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
                 $stm = $_db->prepare('UPDATE user SET password = ?, reset_token = NULL, token_expiry = NULL WHERE reset_token = ? AND token_expiry > NOW()');
                 $stm->execute([$hashedPassword, $token]);
     
