@@ -51,6 +51,24 @@ try {
             <p class="unavailable">This book is currently unavailable.</p>
         <?php endif; ?>
 
+        <button id="addToCartButton">Add to Cart</button>
+
+        <script>
+            document.getElementById('addToCartButton').addEventListener('click', function() {
+                var bookId = <?php echo $bookId; ?>; // Pass the book_id dynamically from PHP
+
+                var xhr = new XMLHttpRequest();
+                xhr.open('GET', '../cartSide/addToCart.php?book_id=' + bookId, true);
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        // Action completed, handle response here (e.g., update UI)
+                        alert('Book added to cart!');
+                    }
+                };
+                xhr.send();
+            });
+        </script>
+
         <a href="<?= $_SERVER['HTTP_REFERER'] ?? 'index.php' ?>">Back to Listing</a>
     </div>
 </body>

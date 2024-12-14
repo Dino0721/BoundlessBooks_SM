@@ -4,6 +4,8 @@
 date_default_timezone_set('Asia/Kuala_Lumpur');
 session_start();
 
+$_SESSION['user_id'] = 1;
+
 function is_get()
 {
     return $_SERVER['REQUEST_METHOD'] == 'GET';

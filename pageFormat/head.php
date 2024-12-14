@@ -1,7 +1,6 @@
 <?php
 
 require_once 'base.php';
-// session_start();
 
 ?>
 
@@ -43,6 +42,7 @@ require_once 'base.php';
                 <?= createNavItem("../productCatalog/productCatalog.php", "Product Catalog"); ?>
                 <?= createNavItem("../productCatalog/manageBooks.php", "Manage Books"); ?>
                 <?= createNavItem("../user/login.php", "Login"); ?>
+                <?= createNavItem("../cartSide/CartPage.php", "Shopping Cart"); ?>
             </ul>
         </nav>
     </header>
