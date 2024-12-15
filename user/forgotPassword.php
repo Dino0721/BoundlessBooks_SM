@@ -23,7 +23,7 @@ if (is_post()) {
 
     if ($user) {
         $token = bin2hex(random_bytes(32));
-        $expiry = date('Y-m-d H:i:s', strtotime('+1 hour'));
+        $expiry = date('Y-m-d H:i:s', strtotime('+10 minutes'));
 
         $stm = $_db->prepare('UPDATE user SET reset_token = ?, token_expiry = ? WHERE email = ?');
         $stm->execute([$token, $expiry, $email]);

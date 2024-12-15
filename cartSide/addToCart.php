@@ -22,8 +22,8 @@ try {
     $_db->beginTransaction();
 
     // Insert the book into the cart_item table
-    $addItemIntoCartSql = "INSERT INTO cart_item (cart_id, book_id, purchase_date, purchase_time)
-                           VALUES (:cart_id, :book_id, CURDATE(), CURTIME())";
+    $addItemIntoCartSql = "INSERT INTO cart_item (cart_id, book_id)
+                           VALUES (:cart_id, :book_id)";
     $addItemIntoCartStmt = $_db->prepare($addItemIntoCartSql);
     $addItemIntoCartStmt->bindParam(':cart_id', $cartId, PDO::PARAM_INT);
     $addItemIntoCartStmt->bindParam(':book_id', $book_id, PDO::PARAM_INT);
