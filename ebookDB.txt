@@ -205,20 +205,22 @@ INSERT INTO `payment` (`payment_id`, `cart_id`, `payment_date`, `total_payment`,
 CREATE TABLE `user` (
   `user_id` int(20) NOT NULL,
   `email` varchar(100) NOT NULL,
-  `password_hash` varchar(255) NOT NULL,
-  `phone_number` varchar(30) DEFAULT NULL
+  `password` varchar(255) NOT NULL,
+  `phone_number` varchar(30) DEFAULT NULL,
+  `reset_token` varchar(255) DEFAULT NULL,
+  `token_expiry` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `user`
 --
 
-INSERT INTO `user` (`user_id`, `email`, `password_hash`, `phone_number`) VALUES
-(1, 'user1@example.com', 'hashed_password_1', '1234567890'),
-(2, 'user2@example.com', 'hashed_password_2', '2345678901'),
-(3, 'user3@example.com', 'hashed_password_3', '3456789012'),
-(4, 'user4@example.com', 'hashed_password_4', '4567890123'),
-(5, 'user5@example.com', 'hashed_password_5', '5678901234');
+INSERT INTO `user` (`user_id`, `email`, `password`, `phone_number`, `reset_token`, `token_expiry`) VALUES
+(1, 'user1@example.com', 'hashed_password_1', '1234567890', '', ''),
+(2, 'user2@example.com', 'hashed_password_2', '2345678901', '', ''),
+(3, 'user3@example.com', 'hashed_password_3', '3456789012', '', ''),
+(4, 'user4@example.com', 'hashed_password_4', '4567890123', '', ''),
+(5, 'user5@example.com', 'hashed_password_5', '5678901234', '', '');
 
 --
 -- Indexes for dumped tables
