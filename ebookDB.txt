@@ -88,24 +88,26 @@ INSERT INTO book_item (book_id, book_name, book_desc, book_price, book_status) V
 -- Insert Data: book_ownership
 INSERT INTO book_ownership (user_id, book_id, purchase_date, purchase_time) VALUES
 (1, 1, '2024-12-15', '01:38:42'),
-(1, 3, '2024-12-15', '01:40:11'),
-(1, 4, '2024-12-15', '17:31:31');
+(1, 2, '2024-12-15', '01:40:11'),
+(1, 5, '2024-12-15', '01:40:11'),
+(2, 2, '2024-12-15', '01:40:11'),
+(4, 3, '2024-12-15', '17:31:31');
 
 -- Insert Data: cart
 INSERT INTO cart (cart_id, user_id, paid, total_price) VALUES
-(1, 1, 0, 29.97),
+(1, 1, 0, 54.97),
 (2, 2, 1, 19.99),
-(3, 3, 0, 44.97),
-(4, 4, 1, 14.99),
-(5, 5, 0, 24.99);
+(3, 3, 0, 24.99),
+(4, 4, 1, 14.99);
+
 
 -- Insert Data: cart_item
 INSERT INTO cart_item (cart_id, book_id) VALUES
 (1, 1),
-(1, 3),
-(2, 2),
+(1, 2),
+(1, 5),
 (3, 4),
-(4, 5);
+(4, 3);
 
 -- Insert Data: payment
 INSERT INTO payment (payment_id, cart_id, payment_date, total_payment, user_id) VALUES
