@@ -42,7 +42,7 @@ require_once 'base.php';
                 <?= createNavItem("../productCatalog/productCatalog.php", "Product Catalog"); ?>
                 <?= createNavItem("../productCatalog/manageBooks.php", "Manage Books"); ?>
                 <?= createNavItem("../user/login.php", "Login"); ?>
-                <?= createNavItem("../cartSide/CartPage.php", "Shopping Cart"); ?>
+                <?= createNavItem("../cartSide/cartMain.php", "Shopping Cart"); ?>
             </ul>
         </nav>
     </header>
