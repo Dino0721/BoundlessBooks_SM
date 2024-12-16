@@ -25,33 +25,31 @@ try {
     $result = $conn->query($dbExistsQuery);
 
     if ($result->num_rows > 0) {
-        echo "<p>Database '$database' exists. Dropping it and Creating the Newest Version one...</p>";
-        $conn->query("DROP DATABASE `$database`");
-        echo "<p>Database dropped successfully.</p>";
+        echo "<p>Database '$database' already exists. No action required.</p>";
     } else {
-        echo "<p>Database '$database' does not exist.</p>";
+        echo "<p>Database '$database' does not exist. Creating it...</p>";
+
+        // Read SQL from the file
+        if (!file_exists($sqlFilePath)) {
+            throw new Exception("SQL file '$sqlFilePath' not found.");
+        }
+        $sqlCommands = file_get_contents($sqlFilePath);
+
+        // Execute SQL commands
+        if ($conn->multi_query($sqlCommands)) {
+            echo "<p>Database '$database' created successfully.</p>";
+        } else {
+            throw new Exception("Error creating database: " . $conn->error);
+        }
+
+        // Wait for all queries to finish executing
+        while ($conn->more_results() && $conn->next_result());
+
+        echo "<p>All SQL commands executed successfully.</p>";
     }
-
-    // Read SQL from the file
-    if (!file_exists($sqlFilePath)) {
-        throw new Exception("SQL file '$sqlFilePath' not found.");
-    }
-    $sqlCommands = file_get_contents($sqlFilePath);
-
-    // Execute SQL commands
-    if ($conn->multi_query($sqlCommands)) {
-        echo "<p>Database '$database' created successfully.</p>";
-    } else {
-        throw new Exception("Error creating database: " . $conn->error);
-    }
-
-    // Wait for all queries to finish executing
-    while ($conn->more_results() && $conn->next_result());
-
-    echo "<p>All SQL commands executed successfully.</p>";
 
     // Display a link to the home page
-    echo '<p><a href="landingPage.php">Go to Home Page</a></p>';
+    echo '<p><a href="productCatalog/productCatalog.php">Go to Home Page</a></p>';
 } catch (Exception $e) {
     echo "<p>Error: " . $e->getMessage() . "</p>";
 } finally {
