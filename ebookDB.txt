@@ -24,6 +24,7 @@ CREATE TABLE IF NOT EXISTS book_item (
   book_desc varchar(255) NOT NULL,
   book_price double(10,2) NOT NULL,
   book_status enum('AVAILABLE', 'DISABLED') NOT NULL DEFAULT 'AVAILABLE',
+  book_photo varchar(100) NOT NULL,
   PRIMARY KEY (book_id)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -78,12 +79,12 @@ INSERT INTO user (user_id, email, password, phone_number, reset_token, token_exp
 (5, 'user5@example.com', 'hashed_password_5', '5678901234', '', NULL);
 
 -- Insert Data: book_item
-INSERT INTO book_item (book_id, book_name, book_desc, book_price, book_status) VALUES
-(1, 'Book 1 Title', 'This is the description of Book 1.', 9.99, 'AVAILABLE'),
-(2, 'Book 2 Title', 'This is the description of Book 2.', 19.99, 'DISABLED'),
-(3, 'Book 3 Title', 'This is the description of Book 3.', 14.99, 'AVAILABLE'),
-(4, 'Book 4 Title', 'This is the description of Book 4.', 24.99, 'AVAILABLE'),
-(5, 'Book 5 Title', 'This is the description of Book 5.', 29.99, 'DISABLED');
+INSERT INTO book_item (book_id, book_name, book_desc, book_price, book_status, book_photo) VALUES
+(1, 'Book 1 Title', 'This is the description of Book 1.', 9.99, 'AVAILABLE', 'book1.jpg'),
+(2, 'Book 2 Title', 'This is the description of Book 2.', 19.99, 'DISABLED', 'book2.jpg'),
+(3, 'Book 3 Title', 'This is the description of Book 3.', 14.99, 'AVAILABLE', 'book3.jpg'),
+(4, 'Book 4 Title', 'This is the description of Book 4.', 24.99, 'AVAILABLE', 'book4.jpg'),
+(5, 'Book 5 Title', 'This is the description of Book 5.', 29.99, 'DISABLED', 'book5.jpg');
 
 -- Insert Data: book_ownership
 INSERT INTO book_ownership (user_id, book_id, purchase_date, purchase_time) VALUES
