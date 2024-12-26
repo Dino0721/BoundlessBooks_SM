@@ -11,45 +11,53 @@ $stm->execute();
 $cartId = $stm->fetchColumn(); // Fetch the cart_id
 
 // Check if we found a cart
-if ($cartId) {
-    // Second query to get all items in the cart with book details using JOIN
-    $sql = "
-        SELECT ci.*, b.book_name, b.book_price 
-        FROM cart_item ci
-        JOIN book_item b ON ci.book_id = b.book_id
-        WHERE ci.cart_id = :cart_id
-    ";
+if (!$cartId) {
+    // No active cart found, create a new cart for the user
+    $sql = "INSERT INTO cart (user_id, paid, total_price) VALUES (:user_id, 0, 0.00)";
     $stm = $_db->prepare($sql);
-    $stm->bindParam(':cart_id', $cartId, PDO::PARAM_INT);
+    $stm->bindParam(':user_id', $user, PDO::PARAM_INT);
     $stm->execute();
 
-    // Check if there are results
-    if ($stm->rowCount() > 0) {
-        // Loop through and display each cart item
-        while ($row = $stm->fetch(PDO::FETCH_ASSOC)) {
-            echo '
-                            <div class="cartitem-container" 
-                    data-book-id="' . $row["book_id"] . '" >
-                    <div class="img-container">
-                        <img src="bookPhoto/kris.jpeg" alt="Book Image" />
-                    </div>
+    // Get the newly created cart_id
+    $cartId = $_db->lastInsertId();
+}
 
-                    <div class="item-infos">
-                        <div class="item-name">Book Name: ' . $row["book_name"] . '</div>
-                    </div>
+// Second query to get all items in the cart with book details using JOIN
+$sql = "
+    SELECT ci.*, b.book_name, b.book_price 
+    FROM cart_item ci
+    JOIN book_item b ON ci.book_id = b.book_id
+    WHERE ci.cart_id = :cart_id
+";
+$stm = $_db->prepare($sql);
+$stm->bindParam(':cart_id', $cartId, PDO::PARAM_INT);
+$stm->execute();
 
-                    <div class="item-edit">
-                        <div class="item-price">Book Price: RM' . number_format($row["book_price"], 2) . '</div>
-                        <div class="item-delete-button">
-                            <i class="fas fa-trash" data-book-id="' . $row["book_id"] . '"></i>
-                        </div>
+// Check if there are results
+if ($stm->rowCount() > 0) {
+    // Loop through and display each cart item
+    while ($row = $stm->fetch(PDO::FETCH_ASSOC)) {
+        echo '
+            <div class="cartitem-container" 
+                data-book-id="' . $row["book_id"] . '" >
+                <div class="img-container">
+                    <img src="bookPhoto/kris.jpeg" alt="Book Image" />
+                </div>
+
+                <div class="item-infos">
+                    <div class="item-name">Book Name: ' . $row["book_name"] . '</div>
+                </div>
+
+                <div class="item-edit">
+                    <div class="item-price">Book Price: RM' . number_format($row["book_price"], 2) . '</div>
+                    <div class="item-delete-button">
+                        <i class="fas fa-trash" data-book-id="' . $row["book_id"] . '"></i>
                     </div>
                 </div>
-            ';
-        }
-    } else {
-        echo "No cart items found.";
+            </div>
+        ';
     }
 } else {
-    echo "No active cart found.";
+    echo "No cart items found.";
 }
+?>

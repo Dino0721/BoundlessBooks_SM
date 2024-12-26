@@ -1,0 +1,76 @@
+/* orderListingStyles.css */
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+    color: #333;
+}
+
+.table-container {
+    max-width: 1200px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+h1 {
+    text-align: center;
+    color: #444;
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+
+.ownership-listing-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0 auto;
+    font-size: 16px;
+    text-align: left;
+}
+
+.ownership-listing-table thead {
+    background-color: #007BFF;
+    color: #fff;
+}
+
+.ownership-listing-table th, 
+.ownership-listing-table td {
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+}
+
+.ownership-listing-table th {
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.ownership-listing-table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.ownership-listing-table td {
+    color: #555;
+}
+
+.ownership-listing-table th:first-child, 
+.ownership-listing-table td:first-child {
+    border-left: none;
+}
+
+.ownership-listing-table th:last-child, 
+.ownership-listing-table td:last-child {
+    border-right: none;
+}
+
+@media (max-width: 768px) {
+    .ownership-listing-table {
+        font-size: 14px;
+    }
+    .table-container {
+        padding: 15px;
+    }
+}

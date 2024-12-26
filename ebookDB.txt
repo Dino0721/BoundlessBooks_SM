@@ -6,93 +6,110 @@ SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
 
--- Table: book_item
-CREATE TABLE IF NOT EXISTS book_item (
-  book_id int(20) NOT NULL AUTO_INCREMENT,
-  book_name varchar(255) NOT NULL,
-  book_desc varchar(255) NOT NULL,
-  book_price double(10,2) NOT NULL,
-  book_status enum('AVAILABLE', 'DISABLED') NOT NULL DEFAULT 'AVAILABLE',
-  PRIMARY KEY (book_id)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
 -- Table: user
 CREATE TABLE IF NOT EXISTS user (
-  user_id int(20) NOT NULL AUTO_INCREMENT,
-  email varchar(100) NOT NULL UNIQUE,
-  password varchar(255) NOT NULL,
-  phone_number varchar(30) DEFAULT NULL,
-  reset_token varchar(255) DEFAULT NULL,
-  token_expiry datetime DEFAULT NULL,
+  user_id INT(20) NOT NULL AUTO_INCREMENT,
+  email VARCHAR(100) NOT NULL UNIQUE,
+  password VARCHAR(255) NOT NULL,
+  phone_number VARCHAR(30) DEFAULT NULL,
+  reset_token VARCHAR(255) DEFAULT NULL,
+  token_expiry DATETIME DEFAULT NULL,
+  admin TINYINT(1) DEFAULT 0,
   PRIMARY KEY (user_id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Table: book_item
+CREATE TABLE IF NOT EXISTS book_item (
+  book_id INT(20) NOT NULL AUTO_INCREMENT,
+  book_name VARCHAR(255) NOT NULL,
+  book_desc VARCHAR(255) NOT NULL,
+  book_price DECIMAL(10,2) NOT NULL,
+  book_status ENUM('AVAILABLE', 'DISABLED') NOT NULL DEFAULT 'AVAILABLE',
+  book_photo VARCHAR(100) NOT NULL,
+  PRIMARY KEY (book_id)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Table: book_ownership
+CREATE TABLE IF NOT EXISTS book_ownership (
+  ownership_id INT(20) NOT NULL AUTO_INCREMENT,
+  user_id INT(20) NOT NULL,
+  book_id INT(20) NOT NULL,
+  purchase_date DATE DEFAULT NULL,
+  purchase_time TIME DEFAULT NULL,
+  PRIMARY KEY (ownership_id)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Table: cart
 CREATE TABLE IF NOT EXISTS cart (
-  cart_id int(20) NOT NULL AUTO_INCREMENT,
-  user_id int(20) NOT NULL,
-  paid boolean DEFAULT FALSE,
-  total_price decimal(10,2) DEFAULT NULL,
-  PRIMARY KEY (cart_id),
-  FOREIGN KEY (user_id) REFERENCES user(user_id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  cart_id INT(20) NOT NULL AUTO_INCREMENT,
+  user_id INT(20) NOT NULL,
+  paid TINYINT(1) DEFAULT 0,
+  total_price DECIMAL(10,2) DEFAULT NULL,
+  PRIMARY KEY (cart_id)
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Table: cart_item
 CREATE TABLE IF NOT EXISTS cart_item (
-  cart_id int(20) NOT NULL,
-  book_id int(20) NOT NULL,
-  purchase_date date DEFAULT NULL,
-  purchase_time time DEFAULT NULL,
-  PRIMARY KEY (cart_id, book_id),
-  FOREIGN KEY (cart_id) REFERENCES cart(cart_id),
-  FOREIGN KEY (book_id) REFERENCES book_item(book_id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  cart_item_id INT(20) NOT NULL AUTO_INCREMENT,
+  cart_id INT(20) NOT NULL,
+  book_id INT(20) NOT NULL,
+  PRIMARY KEY (cart_item_id)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Table: payment
 CREATE TABLE IF NOT EXISTS payment (
-  payment_id int(20) NOT NULL AUTO_INCREMENT,
-  cart_id int(20) DEFAULT NULL,
-  payment_date date DEFAULT NULL,
-  total_payment decimal(10,2) DEFAULT NULL,
-  user_id int(20) DEFAULT NULL,
-  PRIMARY KEY (payment_id),
-  FOREIGN KEY (cart_id) REFERENCES cart(cart_id),
-  FOREIGN KEY (user_id) REFERENCES user(user_id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  payment_id INT(20) NOT NULL AUTO_INCREMENT,
+  cart_id INT(20) DEFAULT NULL,
+  payment_date DATE DEFAULT NULL,
+  total_payment DECIMAL(10,2) DEFAULT NULL,
+  user_id INT(20) DEFAULT NULL,
+  PRIMARY KEY (payment_id)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-INSERT INTO book_item (book_id, book_name, book_desc, book_price, book_status) VALUES
-(1, 'Book 1 Title', 'This is the description of Book 1.', 9.99, 'AVAILABLE'),
-(2, 'Book 2 Title', 'This is the description of Book 2.', 19.99, 'DISABLED'),
-(3, 'Book 3 Title', 'This is the description of Book 3.', 14.99, 'AVAILABLE'),
-(4, 'Book 4 Title', 'This is the description of Book 4.', 24.99, 'AVAILABLE'),
-(5, 'Book 5 Title', 'This is the description of Book 5.', 29.99, 'DISABLED');
-
+-- Insert Data: user
 INSERT INTO user (user_id, email, password, phone_number, reset_token, token_expiry) VALUES
-(1, 'user1@example.com', 'hashed_password_1', '1234567890', '', ''),
-(2, 'user2@example.com', 'hashed_password_2', '2345678901', '', ''),
-(3, 'user3@example.com', 'hashed_password_3', '3456789012', '', ''),
-(4, 'user4@example.com', 'hashed_password_4', '4567890123', '', ''),
-(5, 'user5@example.com', 'hashed_password_5', '5678901234', '', '');
+(1, 'user1@example.com', 'hashed_password_1', '1234567890', '', NULL),
+(2, 'user2@example.com', 'hashed_password_2', '2345678901', '', NULL),
+(3, 'user3@example.com', 'hashed_password_3', '3456789012', '', NULL),
+(4, 'user4@example.com', 'hashed_password_4', '4567890123', '', NULL),
+(5, 'user5@example.com', 'hashed_password_5', '5678901234', '', NULL);
 
+-- Insert Data: book_item
+INSERT INTO book_item (book_id, book_name, book_desc, book_price, book_status, book_photo) VALUES
+(1, 'Book 1 Title', 'This is the description of Book 1.', 9.99, 'AVAILABLE', 'book1.jpg'),
+(2, 'Book 2 Title', 'This is the description of Book 2.', 19.99, 'DISABLED', 'book2.jpg'),
+(3, 'Book 3 Title', 'This is the description of Book 3.', 14.99, 'AVAILABLE', 'book3.jpg'),
+(4, 'Book 4 Title', 'This is the description of Book 4.', 24.99, 'AVAILABLE', 'book4.jpg'),
+(5, 'Book 5 Title', 'This is the description of Book 5.', 29.99, 'DISABLED', 'book5.jpg');
+
+-- Insert Data: book_ownership
+INSERT INTO book_ownership (ownership_id, user_id, book_id, purchase_date, purchase_time) VALUES
+(1, 1, 1, '2024-12-15', '01:38:42'),
+(2, 1, 2, '2024-12-15', '01:40:11'),
+(3, 1, 5, '2024-12-15', '01:40:11'),
+(4, 2, 2, '2024-12-15', '01:40:11'),
+(5, 4, 3, '2024-12-15', '17:31:31');
+
+-- Insert Data: cart
 INSERT INTO cart (cart_id, user_id, paid, total_price) VALUES
-(1, 1, FALSE, 29.97),
-(2, 2, TRUE, 19.99),
-(3, 3, FALSE, 44.97),
-(4, 4, TRUE, 14.99),
-(5, 5, FALSE, 24.99);
+(1, 1, 0, 54.97),
+(2, 2, 1, 19.99),
+(3, 3, 0, 24.99),
+(4, 4, 1, 14.99);
 
-INSERT INTO cart_item (cart_id, book_id, purchase_date, purchase_time) VALUES
-(1, 1, '2024-12-08', '12:30:00'),
-(1, 3, '2024-12-08', '22:40:00'),
-(2, 2, '2024-12-07', '23:20:00'),
-(3, 4, '2024-12-06', '08:10:00'),
-(4, 5, '2024-12-05', '15:50:00');
+-- Insert Data: cart_item
+INSERT INTO cart_item (cart_item_id, cart_id, book_id) VALUES
+(1, 1, 1),
+(2, 1, 2),
+(3, 1, 5),
+(4, 3, 4),
+(5, 4, 3);
 
+-- Insert Data: payment
 INSERT INTO payment (payment_id, cart_id, payment_date, total_payment, user_id) VALUES
 (1, 2, '2024-12-07', 19.99, 2),
 (2, 4, '2024-12-05', 14.99, 4),
-(3, NULL, NULL, NULL, NULL),
-(4, 3, '2024-12-06', 44.97, 3),
-(5, 5, '2024-12-08', 24.99, 5);
+(3, 3, '2024-12-06', 44.97, 3),
+(4, 5, '2024-12-08', 24.99, 5);
 
 COMMIT;
