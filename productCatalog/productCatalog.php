@@ -92,7 +92,7 @@ try {
                         <!-- Display Book Image -->
                         <?php
                         $defaultImage = "../images/default.jpg"; // Path to the default image
-                        $imageSrc = $book->book_image ? "../images/" . htmlspecialchars(trim($book->book_image)) : $defaultImage;
+                        $imageSrc = $book->book_photo ? "../images/" . htmlspecialchars(trim($book->book_photo)) : $defaultImage;
                         ?>
 
                         <img src="<?= $imageSrc ?>" alt="<?= htmlspecialchars($book->book_name) ?>" class="book-image">
