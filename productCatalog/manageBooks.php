@@ -11,30 +11,71 @@ try {
 
     // Ensure $books is always an array, even if no books are found
     if (!$books) {
-        $books = [];
+        $bookImage = 'default.jpg';;
     }
 } catch (PDOException $e) {
     die('Error: ' . $e->getMessage());
 }
+
+try {
+    $stmt = $_db->prepare("SHOW COLUMNS FROM book_item LIKE 'book_category'");
+    $stmt->execute();
+    $categoryColumn = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($categoryColumn) {
+        // Extract ENUM values from the 'Type' field
+        preg_match("/^enum\('(.*)'\)$/", $categoryColumn['Type'], $matches);
+        $bookCategories = explode("','", $matches[1]); // Convert to an array
+    } else {
+        $bookCategories = [];
+    }
+} catch (PDOException $e) {
+    die('Error: ' . $e->getMessage());
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Fetch form data
     $bookName = $_POST['book_name'] ?? '';
     $bookDesc = $_POST['book_desc'] ?? '';
     $bookPrice = $_POST['book_price'] ?? 0;
     $bookStatus = $_POST['book_status'] ?? 'AVAILABLE';
+    $bookCategory = $_POST['book_category'] ?? '';
+    $bookImage = null;
 
     // Validate book price
     if ($bookPrice < 1) {
         echo "<p style='color: red;'>Error: Book price must be at least $1.</p>";
     } else {
+        // Handle the image upload if provided
+        if (isset($_FILES['book_photo']) && $_FILES['book_photo']['error'] === UPLOAD_ERR_OK) {
+            $uploadDir = 'uploads/';
+            $fileName = basename($_FILES['book_photo']['name']);
+            $uploadFile = $uploadDir . $fileName;
+
+            // Check if file is an image
+            if (getimagesize($_FILES['book_photo']['tmp_name'])) {
+                // Move the uploaded file to the server directory
+                if (move_uploaded_file($_FILES['book_photo']['tmp_name'], $uploadFile)) {
+                    $bookImage = $uploadFile; // Save the image path in the database
+                } else {
+                    echo "<p style='color: red;'>Error uploading the image.</p>";
+                }
+            } else {
+                echo "<p style='color: red;'>Uploaded file is not a valid image.</p>";
+            }
+        }
+
         try {
             // Insert book into the database
-            $stmt = $_db->prepare("INSERT INTO book_item (book_name, book_desc, book_price, book_status) VALUES (:name, :desc, :price, :status)");
+            $stmt = $_db->prepare("INSERT INTO book_item (book_name, book_desc, book_price, book_status, book_category, book_photo) 
+                VALUES (:name, :desc, :price, :status, :category, :image)");
             $stmt->execute([
                 ':name' => $bookName,
                 ':desc' => $bookDesc,
                 ':price' => $bookPrice,
                 ':status' => $bookStatus,
+                ':category' => $bookCategory,
+                ':image' => $bookImage, // Save the image path
             ]);
 
             // Set success message in session
@@ -47,22 +88,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-if (isset($_GET['delete_id'])) {
-    $deleteId = $_GET['delete_id'];
+// if (isset($_GET['delete_id'])) {
+//     $deleteId = $_GET['delete_id'];
 
-    try {
-        // Delete the book from the database
-        $stmt = $_db->prepare("DELETE FROM book_item WHERE book_id = :id");
-        $stmt->execute([':id' => $deleteId]);
+//     try {
+//         // Delete the book from the database
+//         $stmt = $_db->prepare("DELETE FROM book_item WHERE book_id = :id");
+//         $stmt->execute([':id' => $deleteId]);
 
-        // Set delete message in session
-        $_SESSION['message'] = 'Book deleted successfully!';
-        header("Location: /productCatalog/manageBooks.php"); // Refresh the page to see the updated list
-        exit;
-    } catch (PDOException $e) {
-        die('Error: ' . $e->getMessage());
-    }
-}
+//         // Set delete message in session
+//         $_SESSION['message'] = 'Book deleted successfully!';
+//         header("Location: /productCatalog/manageBooks.php"); // Refresh the page to see the updated list
+//         exit;
+//     } catch (PDOException $e) {
+//         die('Error: ' . $e->getMessage());
+//     }
+// }
 
 ?>
 
@@ -74,7 +115,6 @@ if (isset($_GET['delete_id'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add New Book</title>
     <link rel="stylesheet" href="style.css">
-
 </head>
 
 <body>
@@ -86,69 +126,107 @@ if (isset($_GET['delete_id'])) {
         ?>
     <?php endif; ?>
 
-    <h1>Add New Book</h1>
+    <div>
+        <a href="../productCatalog/manageCategory.php">Manage Category</a> |
+        <a href="../productCatalog/manageBooks.php">Manage Book</a> |
+        <a href="../productCatalog/productCatalog.php">View Product Catalog</a> |
+    </div>
 
+    <h1>Add New Book</h1>
     <!-- Add Book Form Section -->
     <div class="add-book-container">
-        <form action="" method="POST" class="add-book-form">
-            <label for="book_name">Book Name:</label>
-            <input type="text" id="book_name" name="book_name" required><br>
+        <form action="" method="POST" enctype="multipart/form-data" class="add-book-form">
+            <div class="add-book-row">
+                <label for="book_name">Book Name:</label>
+                <input type="text" id="book_name" name="book_name" required>
+            </div>
 
-            <label for="book_desc">Book Description:</label>
-            <textarea id="book_desc" name="book_desc" required></textarea><br>
+            <div class="add-book-row">
+                <label for="book_desc">Book Description:</label>
+                <textarea id="book_desc" name="book_desc" required></textarea>
+            </div>
 
-            <label for="book_price">Book Price:</label>
-            <input type="number" id="book_price" name="book_price" min="1" required><br>
+            <div class="add-book-row">
+                <label for="book_price">Book Price:</label>
+                <input type="number" id="book_price" name="book_price" min="1" required>
+            </div>
 
-            <label for="book_status">Book Status:</label>
-            <select id="book_status" name="book_status">
-                <option value="AVAILABLE">Available</option>
-                <option value="DISABLED">Disabled</option>
-            </select><br>
+            <div class="add-book-row">
+                <label for="book_status">Book Status:</label>
+                <select id="book_status" name="book_status">
+                    <option value="AVAILABLE">Available</option>
+                    <option value="DISABLED">Disabled</option>
+                </select>
+            </div>
+
+            <div class="add-book-row">
+                <label for="book_category">Category:</label>
+                <select id="book_category" name="book_category" required>
+                    <?php foreach ($bookCategories as $category): ?>
+                        <option value="<?= htmlspecialchars($category) ?>"><?= htmlspecialchars($category) ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+
+            <div class="add-book-row">
+                <label for="book_image">Book Image:</label>
+                <input type="file" id="book_image" name="book_image" accept="image/*">
+            </div>
 
             <button type="submit">Add Book</button>
         </form>
     </div>
 
+
+
     <br>
     <!-- Book List Table -->
     <div class="table-section">
         <h2>Book List</h2>
+        <p class="book-count">Total Book: <span><?= count($books) ?></span></p>
         <table class="book-table">
             <thead>
                 <tr>
+                    <th>Book Photo</th>
                     <th>Book Name</th>
                     <th>Description</th>
                     <th>Price</th>
                     <th>Status</th>
+                    <th>Category</th>
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
                 <?php if (empty($books)): ?>
                     <tr>
-                        <td colspan="5">No books found</td>
+                        <td colspan="6">No books found</td>
                     </tr>
                 <?php else: ?>
                     <?php foreach ($books as $book): ?>
                         <tr>
+                            <td>
+                                <?php if ($book['book_photo']): ?>
+                                    <img src="../images/<?= htmlspecialchars($book['book_photo']) ?>" alt="Book Image" class="book-image">
+                                <?php else: ?>
+                                    No image
+                                <?php endif; ?>
+                            </td>
                             <td><?= htmlspecialchars($book['book_name']) ?></td>
                             <td><?= htmlspecialchars($book['book_desc']) ?></td>
                             <td>$<?= number_format($book['book_price'], 2) ?></td>
                             <td><?= htmlspecialchars($book['book_status']) ?></td>
+                            <td><?= htmlspecialchars($book['book_category']) ?></td>
                             <td>
                                 <a href="editBook.php?book_id=<?= $book['book_id'] ?>" class="action-button">Edit</a> |
-                                <a href="manageBooks.php?delete_id=<?= $book['book_id'] ?>" class="delete-button" onclick="return confirm('Are you sure you want to delete this book?');">Delete</a>
                             </td>
                         </tr>
                     <?php endforeach; ?>
                 <?php endif; ?>
             </tbody>
+
         </table>
     </div>
-
     <br>
-    <a href="../productCatalog/productCatalog.php">Go to Listing</a>
 </body>
 <script>
     $(document).ready(function() {

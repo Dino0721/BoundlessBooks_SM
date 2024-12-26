@@ -43,6 +43,10 @@ try {
 
 <body>
     <div class="product-detail">
+        <img
+            src="../images/<?= htmlspecialchars(!empty($book['book_photo']) ? $book['book_photo'] : 'default.jpg') ?>"
+            alt="<?= htmlspecialchars($book['book_name']) ?>"
+            class="book-detail-image">
         <h1><?= htmlspecialchars($book['book_name']) ?></h1>
         <p><?= htmlspecialchars($book['book_desc']) ?></p>
         <p class="price">Price: $<?= number_format($book['book_price'], 2) ?></p>
@@ -51,26 +55,44 @@ try {
             <p class="unavailable">This book is currently unavailable.</p>
         <?php endif; ?>
 
-        <button id="addToCartButton">Add to Cart</button>
+        <button id="addToCartButton" class="<?= $book['book_status'] === 'DISABLED' ? 'disabled' : '' ?>">
+            <?= $book['book_status'] === 'DISABLED' ? 'Unavailable' : 'Add to Cart' ?>
+        </button>
 
-        <script>
-            document.getElementById('addToCartButton').addEventListener('click', function() {
-                var bookId = <?php echo $bookId; ?>; // Pass the book_id dynamically from PHP
-
-                var xhr = new XMLHttpRequest();
-                xhr.open('GET', '../cartSide/addToCart.php?book_id=' + bookId, true);
-                xhr.onreadystatechange = function() {
-                    if (xhr.readyState === 4 && xhr.status === 200) {
-                        // Action completed, handle response here (e.g., update UI)
-                        alert('Book added to cart!');
-                    }
-                };
-                xhr.send();
-            });
-        </script>
-
-        <a href="<?= $_SERVER['HTTP_REFERER'] ?? 'index.php' ?>">Back to Listing</a>
+        <button id="backToListingButton">Back to Listing</button>
     </div>
+    <script>
+        document.getElementById('addToCartButton').addEventListener('click', function() {
+            var bookId = <?php echo $bookId; ?>; // Pass the book_id dynamically from PHP
+
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', '../cartSide/addToCart.php?book_id=' + bookId, true);
+
+            // Ensure this is only triggered when the request is complete
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4) { // Only proceed when the request is finished
+                    if (xhr.status === 200) { // Check if the request was successful
+                        var response = xhr.responseText.trim(); // Trim any extra spaces or unwanted characters
+                        if (response === "success") {
+                            alert("Book has been added to your cart!");
+                        } else {
+                            alert(response); // Display error or other messages
+                        }
+                    } else {
+                        alert("Error: Unable to add book to cart.");
+                    }
+                }
+            };
+
+            xhr.send();
+        });
+
+        $(document).ready(function() {
+            $('#backToListingButton').click(function() {
+                window.location.href = '<?= $_SERVER['HTTP_REFERER'] ?? 'index.php' ?>';
+            });
+        });
+    </script>
 </body>
 
 </html>

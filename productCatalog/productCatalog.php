@@ -100,7 +100,7 @@ try {
 
                         <h2><?= htmlspecialchars($book->book_name) ?></h2>
                         <p><?= htmlspecialchars($book->book_desc) ?></p>
-                        <p>Price: $<?= number_format($book->book_price, 2) ?></p>
+                        <p class="price">Price: $<?= number_format($book->book_price, 2) ?></p>
                         <p class="status <?= strtolower(htmlspecialchars($book->book_status)) ?>">
                             <?= htmlspecialchars($book->book_status) === 'AVAILABLE' ? 'Available' : 'Unavailable' ?>
                         </p>

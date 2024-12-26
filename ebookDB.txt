@@ -19,12 +19,14 @@ CREATE TABLE IF NOT EXISTS user (
 
 -- Table: book_item
 CREATE TABLE IF NOT EXISTS book_item (
-  book_id int(20) NOT NULL AUTO_INCREMENT,
-  book_name varchar(255) NOT NULL,
-  book_desc varchar(255) NOT NULL,
-  book_price double(10,2) NOT NULL,
-  book_status enum('AVAILABLE', 'DISABLED') NOT NULL DEFAULT 'AVAILABLE',
-  book_photo varchar(100) NOT NULL,
+  book_id INT(20) NOT NULL AUTO_INCREMENT,
+  book_name VARCHAR(255) NOT NULL,
+  book_desc VARCHAR(255) NOT NULL,
+  book_price DECIMAL(10,2) NOT NULL,
+  book_status ENUM('AVAILABLE', 'DISABLED') NOT NULL DEFAULT 'AVAILABLE',
+  book_category ENUM('Fiction', 'Non-Fiction', 'Science', 'Fantasy', 'Romance', 'History') NOT NULL DEFAULT 'Fiction',
+  book_photo VARCHAR(100) NULL,
+  PRIMARY KEY (book_id)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Table: book_ownership
@@ -103,7 +105,30 @@ INSERT INTO cart_item (cart_id, book_id) VALUES
 INSERT INTO payment (payment_id, cart_id, payment_date, total_payment, user_id) VALUES
 (1, 2, '2024-12-07', 19.99, 2),
 (2, 4, '2024-12-05', 14.99, 4),
-(4, 3, '2024-12-06', 44.97, 3),
-(5, 5, '2024-12-08', 24.99, 5);
+(3, 3, '2024-12-06', 44.97, 3),
+(4, 5, '2024-12-08', 24.99, 5);
+
+ALTER TABLE book_item
+MODIFY COLUMN book_category ENUM(
+    'Fiction', 
+    'Non-Fiction', 
+    'Science', 
+    'Fantasy', 
+    'Romance', 
+    'History', 
+    'Mystery', 
+    'Thriller', 
+    'Biography', 
+    'Self-Help', 
+    'Health & Wellness', 
+    'Art & Photography', 
+    'Business & Economics', 
+    'Cookbooks', 
+    'Travel', 
+    'Young Adult (YA)', 
+    'Poetry', 
+    'Philosophy', 
+    'Religion & Spirituality'
+);
 
 COMMIT;
