@@ -5,7 +5,6 @@ include '../pageFormat/head.php';
 // Get the product details based on the `book_id` from the URL
 $bookId = $_GET['book_id'] ?? 0;
 
-
 try {
     // Prepare the SQL statement
     $stmt = $_db->prepare("SELECT * FROM book_item WHERE book_id = :book_id");
