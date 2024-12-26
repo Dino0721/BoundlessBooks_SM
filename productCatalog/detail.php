@@ -2,7 +2,9 @@
 include '../pageFormat/base.php';
 include '../pageFormat/head.php';
 
-// Get the product details based on the `book_id` from the URL
+// forgott
+global $_db;
+// Fetch the product details based on the `book_id` from the URL
 $bookId = $_GET['book_id'] ?? 0;
 
 try {
@@ -20,6 +22,10 @@ try {
 } catch (PDOException $e) {
     die('Error: ' . $e->getMessage());
 }
+// Debugging the fetched data
+// echo "<pre>";
+// print_r($book); // Output the fetched data to check the result
+// echo "</pre>";
 ?>
 
 <!DOCTYPE html>
@@ -30,6 +36,9 @@ try {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= htmlspecialchars($book['book_name']) ?></title>
     <link rel="stylesheet" href="style.css">
+    <style>
+
+    </style>
 </head>
 
 <body>
@@ -42,9 +51,7 @@ try {
             <p class="unavailable">This book is currently unavailable.</p>
         <?php endif; ?>
 
-        <button id="addToCartButton" <?php echo ($book['book_status'] === 'DISABLED') ? 'disabled' : ''; ?>>
-            Add to Cart
-        </button>
+        <button id="addToCartButton">Add to Cart</button>
 
         <script>
             document.getElementById('addToCartButton').addEventListener('click', function() {
@@ -52,24 +59,12 @@ try {
 
                 var xhr = new XMLHttpRequest();
                 xhr.open('GET', '../cartSide/addToCart.php?book_id=' + bookId, true);
-
-                // Ensure this is only triggered when the request is complete
                 xhr.onreadystatechange = function() {
-                    if (xhr.readyState === 4) { // Only proceed when the request is finished
-                        if (xhr.status === 200) { // Check if the request was successful
-                            var response = xhr.responseText.trim(); // Trim any extra spaces or unwanted characters
-
-                            if (response === "success") {
-                                alert("Book has been added to your cart!");
-                            } else {
-                                alert(response); // Display error or other messages
-                            }
-                        } else {
-                            alert("Error: Unable to add book to cart.");
-                        }
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        // Action completed, handle response here (e.g., update UI)
+                        alert('Book added to cart!');
                     }
                 };
-
                 xhr.send();
             });
         </script>

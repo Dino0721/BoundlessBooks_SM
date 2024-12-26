@@ -42,15 +42,7 @@ require_once 'base.php';
                 <?= createNavItem("../productCatalog/productCatalog.php", "Product Catalog"); ?>
                 <?= createNavItem("../productCatalog/manageBooks.php", "Manage Books"); ?>
                 <?= createNavItem("../user/login.php", "Login"); ?>
-                <?= createNavItem("../user/logout.php", "Logout"); ?>
-                <?= createNavItem("../cartSide/CartPage.php", "Shopping Cart"); ?>
-                <?php
-                if (isset($_SESSION['admin']) && $_SESSION['admin'] == 0) {
-                    echo createNavItem("../orderManagement/orderHistory.php", "Order History");
-                    echo createNavItem("../orderManagement/orderListing.php", "Order Listing");
-                }
-                ?>
-
+                <?= createNavItem("../cartSide/cartMain.php", "Shopping Cart"); ?>
             </ul>
         </nav>
     </header>
