@@ -88,9 +88,14 @@ try {
                     <div class="product-item"
                         data-url="detail.php?book_id=<?= $book->book_id ?>"
                         data-status="<?= htmlspecialchars($book->book_status) ?>">
+                        <!-- Display book image or default.jpg -->
+                        <img
+                            src="../images/<?= htmlspecialchars(!empty($book->book_photo) ? $book->book_photo : 'default.jpg') ?>"
+                            alt="<?= htmlspecialchars($book->book_name) ?>"
+                            class="book-detail-image">
                         <h2><?= htmlspecialchars($book->book_name) ?></h2>
                         <p><?= htmlspecialchars($book->book_desc) ?></p>
-                        <p>Price: $<?= number_format($book->book_price, 2) ?></p>
+                        <p class="price">Price: $<?= number_format($book->book_price, 2) ?></p>
                         <p class="status <?= strtolower(htmlspecialchars($book->book_status)) ?>">
                             <?= htmlspecialchars($book->book_status) === 'AVAILABLE' ? 'Available' : 'Unavailable' ?>
                         </p>

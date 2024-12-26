@@ -45,7 +45,7 @@ require_once 'base.php';
                 <?= createNavItem("../user/logout.php", "Logout"); ?>
                 <?= createNavItem("../cartSide/CartPage.php", "Shopping Cart"); ?>
                 <?php
-                if (isset($_SESSION['admin']) && $_SESSION['admin'] == 0) {
+                if (isset($_SESSION['admin']) && $_SESSION['admin'] == 1) {
                     echo createNavItem("../orderManagement/orderHistory.php", "Order History");
                     echo createNavItem("../orderManagement/orderListing.php", "Order Listing");
                 }

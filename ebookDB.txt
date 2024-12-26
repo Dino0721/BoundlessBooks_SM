@@ -25,7 +25,8 @@ CREATE TABLE IF NOT EXISTS book_item (
   book_desc VARCHAR(255) NOT NULL,
   book_price DECIMAL(10,2) NOT NULL,
   book_status ENUM('AVAILABLE', 'DISABLED') NOT NULL DEFAULT 'AVAILABLE',
-  book_photo VARCHAR(100) NOT NULL,
+  book_category ENUM('Fiction', 'Non-Fiction', 'Science', 'Fantasy', 'Romance', 'History') NOT NULL DEFAULT 'Fiction',
+  book_photo VARCHAR(100) NULL,
   PRIMARY KEY (book_id)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -111,5 +112,28 @@ INSERT INTO payment (payment_id, cart_id, payment_date, total_payment, user_id) 
 (2, 4, '2024-12-05', 14.99, 4),
 (3, 3, '2024-12-06', 44.97, 3),
 (4, 5, '2024-12-08', 24.99, 5);
+
+ALTER TABLE book_item
+MODIFY COLUMN book_category ENUM(
+    'Fiction', 
+    'Non-Fiction', 
+    'Science', 
+    'Fantasy', 
+    'Romance', 
+    'History', 
+    'Mystery', 
+    'Thriller', 
+    'Biography', 
+    'Self-Help', 
+    'Health & Wellness', 
+    'Art & Photography', 
+    'Business & Economics', 
+    'Cookbooks', 
+    'Travel', 
+    'Young Adult (YA)', 
+    'Poetry', 
+    'Philosophy', 
+    'Religion & Spirituality'
+);
 
 COMMIT;

@@ -225,6 +225,16 @@ button:hover {
     margin-top: 20px;
 }
 
+.book-detail-image {
+    width: 300px; 
+    height: 400px; 
+    height: auto;
+    object-fit: cover;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
 .product-item {
     background-color: #f9f9f9;
     padding: 15px;
@@ -235,6 +245,7 @@ button:hover {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     text-align: center;
     cursor: pointer; /* Make it clear the div is clickable */
+    max-width: 300px;
 }
 
 .product-item h2,
@@ -269,6 +280,10 @@ button:hover {
     border-radius: 5px;
     color: #fff;
 }
+
+.price {
+    font-weight: bold; 
+  }
 
 .product-item .status.available {
     background-color: #28a745; /* Green for Available */
@@ -316,6 +331,12 @@ button:hover {
     margin-bottom: 20px;
 }
 
+button.disabled {
+    background-color: #d3d3d3;
+    cursor: not-allowed;
+    pointer-events: none; /* Prevents click events */
+}
+
 .product-detail a {
     display: inline-block;
     margin-top: 20px;
@@ -331,6 +352,136 @@ button:hover {
     background: #0056b3;
 }
 /* End Product detail */
+
+/* Start Style for the Add Book Container */
+/* Start Style for the Add Book Container */
+.add-book-container {
+    background-color: #f0f0f0;
+    padding: 20px;
+    margin-bottom: 30px;
+    border-radius: 8px;
+}
+
+/* Style for the Add Book Form */
+.add-book-form {
+    display: flex;
+    flex-wrap: wrap; /* Allows items to wrap into rows */
+    gap: 20px; /* Space between each field */
+}
+
+/* Styling for each field in a row */
+.add-book-field {
+    display: flex;
+    flex-direction: column; /* Label on top, input below */
+    width: calc(50% - 20px); /* Half width for each field with spacing */
+}
+
+/* Full width for larger fields like textarea */
+.add-book-field.textarea {
+    width: 100%; /* Make textarea fields span full width */
+}
+
+/* Label Styling */
+.add-book-field label {
+    margin-bottom: 5px;
+    font-weight: bold; /* Optional: Make labels bold */
+    display: block; /* Ensure label occupies full row */
+}
+
+/* Input, Select, and Textarea Styling */
+.add-book-field input,
+.add-book-field select,
+.add-book-field textarea {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%; /* Ensure inputs take full width of their container */
+}
+
+/* Textarea Specific Styling */
+.add-book-field textarea {
+    height: 100px;
+}
+
+/* Button Style */
+.add-book-form button {
+    padding: 12px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: background-color 0.3s ease;
+    margin-top: 10px;
+    width: 100%; /* Button spans full width on its row */
+}
+
+.add-book-form button:hover {
+    background-color: #45a049;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .add-book-field {
+        width: 100%; /* Make each field span full width on small screens */
+    }
+}
+
+.book-image {
+    width: 50px;
+    height: 50px;
+    object-fit: cover; /* Ensures the image scales and is not distorted */
+    border-radius: 5px; /* Optional: adds rounded corners to the image */
+}
+/* End Manage Book Page */
+
+/* Start Manage Category Page */
+.add-category-container {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-align: left;
+    margin-top: 20px;
+    background-color: #f0f0f0;
+    padding: 20px;
+    margin-bottom: 30px;
+    border-radius: 8px;
+}
+
+.add-category-row {
+    display: flex;
+    gap: 10px;
+    align-items: stretch;
+}
+
+/* Input field specific to add-category form */
+.add-category-input {
+    flex: 4; /* Takes 80% of the space */
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+/* Button specific to add-category form */
+.add-category-button {
+    flex: 1;
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.add-category-button:hover {
+    background-color: #45a049; 
+}
+/* End Manage Category Page */
 
 /* General container for alignment */
 .search-filter-container {
@@ -533,88 +684,7 @@ button:hover {
 }
 /* End Form Section Styling */
 
-/* Start Style for the Add Book Container */
-.add-book-container {
-    background-color: #f0f0f0;
-    padding: 20px;
-    margin-bottom: 30px;
-    border-radius: 8px;
-}
 
-/* Style for the Add Book Form */
-.add-book-form {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    justify-content: space-between;
-}
-
-/* Styling form fields horizontally */
-.add-book-container {
-    background-color: #f0f0f0;
-    padding: 20px;
-    margin-bottom: 30px;
-    border-radius: 8px;
-}
-
-/* Style for the Add Book Form */
-.add-book-form {
-    display: inline-flex;
-    gap: 20px;
-    justify-content: flex-start;
-    flex-wrap: nowrap;
-}
-
-/* Label and Input Styling */
-.add-book-form label {
-    width: 150px; /* Set a fixed width for the label */
-    margin-bottom: 8px;
-    display: inline-block; /* Make label an inline block */
-}
-
-.add-book-form input,
-.add-book-form select,
-.add-book-form textarea {
-    width: calc(100% - 160px); /* Adjust width to fill the remaining space */
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
-
-/* Make the description textarea use full available width */
-.add-book-form textarea {
-    height: 100px;
-}
-
-/* Button Style */
-.add-book-form button {
-    padding: 12px 20px; /* Adjust padding for a larger button */
-    background-color: #007bff; /* Blue background color */
-    color: white; /* White text color */
-    border: none;
-    border-radius: 5px; /* Rounded corners */
-    font-size: 16px; /* Adjust font size */
-    font-weight: bold; /* Make the text bold */
-    cursor: pointer; /* Pointer cursor on hover */
-    text-transform: uppercase; /* Transform text to uppercase */
-    transition: background-color 0.3s ease; /* Smooth background change on hover */
-}
-
-.add-book-form button:hover {
-    background-color: #45a049;
-}
-
-/* Optional: Style for form fields in a column on smaller screens */
-@media (max-width: 768px) {
-    .add-book-form label,
-    .add-book-form input,
-    .add-book-form select,
-    .add-book-form textarea {
-        width: 100%; /* Stack vertically on small screens */
-    }
-}
-/* End Style for the Add Book Container */
 
 /* Start Edit Book Form Styling */
 .alert-message {
@@ -630,7 +700,7 @@ button:hover {
     background-color: #f44336;
 }
 .edit-book-form {
-    max-width: 600px;
+    max-width: 800px;
     margin: 0 auto;
     padding: 20px;
     background-color: #f9f9f9;
