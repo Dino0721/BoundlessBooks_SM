@@ -31,6 +31,7 @@ if (is_post()) {
             if ($user && password_verify($password, $user['password'])) {
                 session_start();
                 $_SESSION['user_id'] = $user['user_id'];
+                $_SESSION['email'] = $user['email'];
                 $_SESSION['admin'] = $user['admin'];
                 temp('info', 'Login successful.');
                 login($user, '../productCatalog/productCatalog.php');

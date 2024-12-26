@@ -2,7 +2,9 @@
 include '../pageFormat/base.php';
 include '../pageFormat/head.php';
 
-// Get the product details based on the `book_id` from the URL
+// forgott
+global $_db;
+// Fetch the product details based on the `book_id` from the URL
 $bookId = $_GET['book_id'] ?? 0;
 
 try {
@@ -20,6 +22,10 @@ try {
 } catch (PDOException $e) {
     die('Error: ' . $e->getMessage());
 }
+// Debugging the fetched data
+// echo "<pre>";
+// print_r($book); // Output the fetched data to check the result
+// echo "</pre>";
 ?>
 
 <!DOCTYPE html>
@@ -30,6 +36,9 @@ try {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= htmlspecialchars($book['book_name']) ?></title>
     <link rel="stylesheet" href="style.css">
+    <style>
+
+    </style>
 </head>
 
 <body>
