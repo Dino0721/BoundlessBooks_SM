@@ -41,8 +41,25 @@ require_once 'base.php';
             <ul class="header__ul">
                 <?= createNavItem("../productCatalog/productCatalog.php", "Product Catalog"); ?>
                 <?= createNavItem("../productCatalog/manageBooks.php", "Manage Books"); ?>
-                <?= createNavItem("../user/login.php", "Login"); ?>
-                <?= createNavItem("../cartSide/cartMain.php", "Shopping Cart"); ?>
+
+                <?php if (isset($_SESSION['user_id'])): ?>
+                    <a href="../user/profile.php" class="profile">
+                        <?= htmlspecialchars($_SESSION['email'] ?? 'User'); ?>
+                    </a>
+                    <?= createNavItem("../user/logout.php", "Logout"); ?>
+                <?php else: ?>
+                    <?= createNavItem("../user/login.php", "Login"); ?>
+                <?php endif; ?>
+
+                <?= createNavItem("../cartSide/CartPage.php", "Shopping Cart"); ?>
+                
+                <?php
+                if (isset($_SESSION['admin']) && $_SESSION['admin'] == 0) {
+                    echo createNavItem("../orderManagement/orderHistory.php", "Order History");
+                    echo createNavItem("../orderManagement/orderListing.php", "Order Listing");
+                }
+                ?>
+
             </ul>
         </nav>
     </header>
