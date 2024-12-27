@@ -1,9 +1,9 @@
 <?php
 include '../pageFormat/base.php';
-include '../pageFormat/head.php';
 
-// forgott
-global $_db;
+// Define the title here
+$_title = 'Default Title';  // You can use a default or dynamic value
+
 // Fetch the product details based on the `book_id` from the URL
 $bookId = $_GET['book_id'] ?? 0;
 
@@ -19,13 +19,15 @@ try {
     if (!$book) {
         die('Product not found!');
     }
+
+    // Set the page title dynamically
+    $_title = htmlspecialchars($book['book_name']); // Ensure proper escaping
+
 } catch (PDOException $e) {
     die('Error: ' . $e->getMessage());
 }
-// Debugging the fetched data
-// echo "<pre>";
-// print_r($book); // Output the fetched data to check the result
-// echo "</pre>";
+
+include '../pageFormat/head.php';  // Include head.php after setting the title
 ?>
 
 <!DOCTYPE html>
@@ -34,10 +36,11 @@ try {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= htmlspecialchars($book['book_name']) ?></title>
+    <!-- Dynamically set the page title -->
+    <title><?php echo $_title; ?></title>
     <link rel="stylesheet" href="style.css">
     <style>
-
+        /* Additional styles can go here */
     </style>
 </head>
 
@@ -64,6 +67,7 @@ try {
 
         <button id="backToListingButton">Back to Listing</button>
     </div>
+
     <script>
         document.getElementById('addToCartButton').addEventListener('click', function() {
             var bookId = <?php echo $bookId; ?>; // Pass the book_id dynamically from PHP

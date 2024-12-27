@@ -1,6 +1,8 @@
 <?php
+$_title = 'Manage Category';
 include '../pageFormat/base.php';
 include '../pageFormat/head.php';
+
 
 global $_db;
 

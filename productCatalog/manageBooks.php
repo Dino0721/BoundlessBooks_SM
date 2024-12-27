@@ -1,4 +1,5 @@
 <?php
+$_title = 'Manage Book';
 include '../pageFormat/base.php';
 include '../pageFormat/head.php';
 
