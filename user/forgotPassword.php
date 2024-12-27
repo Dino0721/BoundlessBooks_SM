@@ -3,14 +3,13 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
 require '../vendor/autoload.php';
-
 require '../pageFormat/base.php';
 include '../pageFormat/head.php';
 
 if (is_post()) {
     $email = req('email');
 
-    // email validation
+    // Email validation
     if ($email == '') {
         $_err['email'] = 'Required';
     } else if (!is_email($email)) {
@@ -28,20 +27,12 @@ if (is_post()) {
         $stm = $_db->prepare('UPDATE user SET reset_token = ?, token_expiry = ? WHERE email = ?');
         $stm->execute([$token, $expiry, $email]);
 
-        $resetLink = "localhost:8000/user/changePassword.php?reset_token=$token";
+        $resetLink = "http://localhost:8000/user/changePassword.php?reset_token=$token";
 
-        $mail = new PHPMailer(true);
+        // Use the get_mail() function
+        $mail = get_mail();
         try {
-            $mail->isSMTP();
-            $mail->Host = 'smtp.gmail.com';
-            $mail->SMTPAuth = true;
-            $mail->Username = 'tequilaguey777@gmail.com'; // Your Gmail address
-            $mail->Password = 'dbkhijmymjdaohkj'; // Your Gmail app password
-            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-            $mail->Port = 587;
-
             // Email details
-            $mail->setFrom($mail->Username, 'BoundlessBooks');
             $mail->addAddress($email); // Recipient's email
             $mail->Subject = 'Password Reset';
             $mail->Body = "Click this link to reset your password: $resetLink";
