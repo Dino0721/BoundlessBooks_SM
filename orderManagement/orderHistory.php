@@ -19,17 +19,26 @@ global $_db;
 
 <div class="table-container">
     <h1>Order History</h1>
+
+    <!-- Search form -->
+    <form method="GET" action="">
+        <input type="text" name="search" placeholder="Search for a book..." value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>">
+        <button type="submit">Search</button>
+    </form>
+
     <?php
 
     $user = $_SESSION['user_id'];
+    $searchQuery = isset($_GET['search']) ? '%' . $_GET['search'] . '%' : '%'; // Default to showing all books if no search query
 
-    // Query to join book_ownership with book_item and fetch necessary details
+    // Query to join book_ownership with book_item and fetch necessary details, including a search filter
     $sql = "SELECT b.book_name, b.book_price, bo.purchase_date, bo.purchase_time 
             FROM book_ownership bo 
             JOIN book_item b ON b.book_id = bo.book_id 
-            WHERE bo.user_id = :user_id";
+            WHERE bo.user_id = :user_id AND b.book_name LIKE :search_query";
     $stm = $_db->prepare($sql);
     $stm->bindParam(':user_id', $user, PDO::PARAM_INT);
+    $stm->bindParam(':search_query', $searchQuery, PDO::PARAM_STR);
     $stm->execute();
 
     // Check if there are results

@@ -1,8 +1,5 @@
 <?php
 
-require '../pageFormat/base.php';
-require '../pageFormat/head.php';
-
 if (is_post()) {
     $enteredOtp = req('otp');
     $email = $_SESSION['signup_email'] ?? null;
