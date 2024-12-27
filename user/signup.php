@@ -4,8 +4,6 @@ require_once __DIR__ . '/../vendor/autoload.php';
 require '../pageFormat/base.php';
 require '../pageFormat/head.php';
 
-// require '../vendor/autoload.php';
-
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
