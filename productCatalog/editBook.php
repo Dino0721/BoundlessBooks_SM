@@ -3,6 +3,11 @@
 require_once '../pageFormat/base.php';
 include '../pageFormat/head.php';
 
+if (isset($_SESSION['message'])) {
+    echo "<p style='color: green; text-align: center; margin-top: 20px;'>" . htmlspecialchars($_SESSION['message']) . "</p>";
+    unset($_SESSION['message']); // Clear the message after displaying it
+}
+
 $book_id = filter_input(INPUT_GET, 'book_id', FILTER_VALIDATE_INT);
 if (!$book_id) {
     echo "Invalid book ID!";
@@ -26,13 +31,14 @@ $book_desc = $book->book_desc;
 $book_price = $book->book_price;
 $book_status = $book->book_status;
 $book_category = $book->book_category;
-$book_photo = $book->book_photo;  // Default to current photo unless a new one is uploaded
+$book_photo = $book->book_photo;
+$current_pdf_path = $book->pdf_path; // Store the current PDF path
 
 // Fetch the distinct book categories dynamically from the database
 try {
     $stmt = $_db->query("SHOW COLUMNS FROM book_item WHERE Field = 'book_category'");
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
-    preg_match("/^enum\((.*)\)$/", $result['Type'], $matches);
+    preg_match("/^enum\('(.*)'\)$/", $result['Type'], $matches);
     $bookCategories = array_map(function ($value) {
         return trim($value, "'");
     }, explode(',', $matches[1]));
@@ -45,8 +51,8 @@ try {
 try {
     $stmt = $_db->query("SHOW COLUMNS FROM book_item WHERE Field = 'book_status'");
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
-    preg_match("/^enum\((.*)\)$/", $result['Type'], $matches);
-    
+    preg_match("/^enum\('(.*)'\)$/", $result['Type'], $matches);
+
     // Extract the values and format them
     $bookStatuses = array_map(function ($value) {
         return trim($value, "'");
@@ -55,7 +61,6 @@ try {
     echo "Error fetching book statuses: " . $e->getMessage();
     exit;
 }
-
 
 // Handle form submission for updating book details
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -75,8 +80,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
         if (in_array($_FILES['book_photo']['type'], $allowedTypes)) {
             if (move_uploaded_file($_FILES['book_photo']['tmp_name'], $uploadPath)) {
-                $book_photo = $fileName;  // Update photo if new one uploaded
+                $book_photo = $fileName;
             }
+        }
+    }
+
+    // Handle PDF upload if provided
+    if (isset($_FILES['book_pdf']) && $_FILES['book_pdf']['error'] === UPLOAD_ERR_OK) {
+        $pdfUploadDir = '../books/';
+        $pdfFileName = basename($_FILES['book_pdf']['name']);
+        $pdfUploadFile = $pdfUploadDir . $pdfFileName;
+
+        if (move_uploaded_file($_FILES['book_pdf']['tmp_name'], $pdfUploadFile)) {
+            $new_pdf_path = 'books/' . $pdfFileName; // Relative path for database
+        } else {
+            echo "<p style='color: red;'>Error uploading PDF file.</p>";
         }
     }
 
@@ -115,25 +133,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $updateParams[':book_photo'] = $book_photo;
     }
 
+    if (isset($new_pdf_path)) {
+        $updateFields[] = "pdf_path = :pdf_path";
+        $updateParams[':pdf_path'] = $new_pdf_path;
+    }
+
     // If there are fields to update, execute the update query
     if (count($updateFields) > 0) {
-        // Build the update SQL dynamically
         $updateSQL = "UPDATE book_item SET " . implode(", ", $updateFields) . " WHERE book_id = :book_id";
 
         try {
             $stmt = $_db->prepare($updateSQL);
             $stmt->execute($updateParams);
-            echo "Book updated successfully!";
-            header("Location: productCatalog.php"); // Redirect after successful update
+
+            // Set the session message
+            $_SESSION['message'] = "Book updated successfully!";
+            header("Location: editBook.php?book_id=$book_id"); // Redirect back to the same page
             exit;
         } catch (PDOException $e) {
-            echo 'Error: ' . $e->getMessage();
+            echo "<p style='color: red; text-align: center; margin-top: 20px;'>Error: " . htmlspecialchars($e->getMessage()) . "</p>";
         }
-    } else {
-        echo "No changes detected!";
-        exit;
     }
 }
+
 ?>
 
 
@@ -149,8 +171,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <body>
     <main>
-
-        <a href="<?= $_SERVER['HTTP_REFERER'] ?? 'index.php' ?>">Back to Manage Books</a>
+        <div>
+            <a href="../productCatalog/manageCategory.php">Manage Category</a> |
+            <a href="../productCatalog/manageBooks.php">Manage Book</a> |
+            <a href="../productCatalog/productCatalog.php">View Product Catalog</a> |
+        </div>
         <h1>Edit Book Details</h1>
 
         <!-- Edit Book Form -->
@@ -193,6 +218,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <?php endforeach; ?>
             </select>
 
+            <label for="book_pdf">Book PDF:</label>
+            <input type="file" id="book_pdf" name="book_pdf" accept=".pdf">
+            <?php if (!empty($current_pdf_path)): ?>
+                <p>Current PDF: <a href="../<?= htmlspecialchars($current_pdf_path) ?>" target="_blank"><?= basename($current_pdf_path) ?></a></p>
+            <?php endif; ?>
+
             <button type="submit">Update Book</button>
         </form>
     </main>
@@ -210,5 +241,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </script>
     <script src="../js/main.js"></script>
 </body>
+<script>
+    setTimeout(() => {
+        const messageElement = document.querySelector('p[style*="color: green"]');
+        if (messageElement) {
+            messageElement.style.display = 'none';
+        }
+    }, 2500);
+</script>
 
 </html>
