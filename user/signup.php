@@ -76,6 +76,14 @@ if (is_post()) {
 }
 ?>
 
+<?php
+
+if (isset($_POST['back_to_login'])) {
+    redirect('login.php'); // Redirect to login.php using the base.php function
+    exit();
+}
+?>
+
 <!-- Sign-Up Form -->
 <form action="signup.php" method="post" id="sign-up-form">
     <h1>Sign Up</h1>
@@ -92,6 +100,7 @@ if (is_post()) {
     <?= html_password('confirm_password', 'maxlength="100"') ?>
     <?= err('confirm_password') ?><br>
 
+    <button type="submit" name="back_to_login">Back to Login</button>
     <button type="submit">Sign Up</button>
     <?= isset($_err['general']) ? '<p>' . $_err['general'] . '</p>' : '' ?>
 </form>
