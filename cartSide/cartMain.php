@@ -61,48 +61,41 @@ try {
                     <th>Book Status</th>
                     <th>Action</th>
                 </tr>";
-            foreach ($cartItems as $item) {
-                $defaultImage = "../images/default.jpg"; // Path to the default image
-                $imageSrc = $item['book_photo'] ? "../images/" . htmlspecialchars(trim($item['book_photo'])) : $defaultImage;
-            
-                // Truncate description to 40 characters and add hover tooltip
-                $fullDesc = htmlspecialchars($item['book_desc']);
-                $shortDesc = strlen($fullDesc) > 40 ? substr($fullDesc, 0, 37) . '...' : $fullDesc;
-            
-                // Check if the user already owns this book
-                $isOwned = in_array($item['book_id'], $ownedBooks);
-            
-                // Set the checkbox as disabled if the user owns the book
-                $disabled = $isOwned ? 'disabled' : '';
-                $darkenClass = $isOwned ? 'darken' : '';  // Apply darken class if the book is owned
-            
-                echo "<tr>
-                        <td>
-                            <input type='checkbox' 
-                                    class='select-book' 
-                                    data-price='{$item['book_price']}' 
-                                    $disabled>
-                        </td>
-                        <td class='$darkenClass'>
-                            <img src='$imageSrc' alt='" . htmlspecialchars($item['book_name']) . "' style='width: 100px; height: auto;'>
-                        </td>
-                        <td class='$darkenClass'>" . htmlspecialchars($item['book_name']) . "</td>
-                        <td>
-                            <span class='tooltip' title='$fullDesc'>$shortDesc</span>
-                        </td>
-                        <td>" . htmlspecialchars($item['book_category']) . "</td>
-                        <td>" . htmlspecialchars(number_format($item['book_price'], 2)) . "</td>
-                        <td class='" . strtolower(htmlspecialchars($item['book_status'])) . "'>
-                            " . ($item['book_status'] === 'AVAILABLE' ? 'Available' : 'Unavailable') . "
-                        </td>
-                        <td>
-                            <form method='POST' action='deleteCartBook.php'>
-                                <input type='hidden' name='delete_book_id' value='" . htmlspecialchars($item['book_name']) . "'>
-                                <button type='submit'>Delete</button>
-                            </form>
-                        </td>
-                    </tr>";
-                        
+    foreach ($cartItems as $item) {
+        $defaultImage = "../images/default.jpg"; // Path to the default image
+        $imageSrc = $item['book_photo'] ? "../images/" . htmlspecialchars(trim($item['book_photo'])) : $defaultImage;
+    
+        // Truncate description to 40 characters and add hover tooltip
+        $fullDesc = htmlspecialchars($item['book_desc']);
+        $shortDesc = strlen($fullDesc) > 40 ? substr($fullDesc, 0, 37) . '...' : $fullDesc;
+    
+        $disabled = $item['book_status'] === 'DISABLED' ? 'disabled' : '';
+        echo "<tr>
+                <td>
+                    <input type='checkbox' 
+                            class='select-book' 
+                            data-price='{$item['book_price']}' 
+                            $disabled>
+                </td>
+                <td>
+                    <img src='$imageSrc' alt='" . htmlspecialchars($item['book_name']) . "' style='width: 100px; height: auto;'>
+                </td>
+                <td>" . htmlspecialchars($item['book_name']) . "</td>
+                <td>
+                    <span class='tooltip' title='$fullDesc'>$shortDesc</span>
+                </td>
+                <td>" . htmlspecialchars($item['book_category']) . "</td>
+                <td>" . htmlspecialchars(number_format($item['book_price'], 2)) . "</td>
+                <td class='" . strtolower(htmlspecialchars($item['book_status'])) . "'>
+                    " . ($item['book_status'] === 'AVAILABLE' ? 'Available' : 'Unavailable') . "
+                </td>
+                <td>
+                    <form method='POST' action='deleteCartBook.php'>
+                        <input type='hidden' name='delete_book_id' value='" . htmlspecialchars($item['book_name']) . "'>
+                        <button type='submit'>Delete</button>
+                    </form>
+                </td>
+                </tr>";
     }
         echo "</table>";
         echo "<div id='summary-container'>
