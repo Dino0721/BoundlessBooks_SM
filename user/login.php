@@ -63,6 +63,7 @@ if (is_post()) {
 
     <div class="button-container">
         <button type="submit">Login</button>
+        <button type="reset">Reset</button>
         <button type="button" id="sign-up-btn"><a href="signup.php">Sign Up</a></button>
     </div>
 
