@@ -17,7 +17,6 @@ if (empty($_SESSION['user_id']) && ($currentUrl !== '/user/login.php' && $curren
     exit();
 }
 
-
 function is_get()
 {
     return $_SERVER['REQUEST_METHOD'] == 'GET';
@@ -69,8 +68,7 @@ function temp($key, $value = null)
     }
 }
 
-function is_email($value)
-{
+function is_email($value){
     return filter_var($value, FILTER_VALIDATE_EMAIL) !== false;
 }
 
@@ -221,6 +219,24 @@ function auth(...$roles)
         }
     }
     redirect('../loginSide/login.php');
+}
+
+// email function
+function get_mail() {
+    require_once '../lib/PHPMailer.php';
+    require_once '../lib/SMTP.php';
+
+    $m = new PHPMailer(true);
+    $m->isSMTP();
+    $m->SMTPAuth = true;
+    $m->Host = 'smtp.gmail.com';
+    $m->Port = 587;
+    $m->Username = 'tequilaguey777@gmail.com';
+    $m->Password = 'dbkh ijmy mjda ohkj';
+    $m->CharSet = 'utf-8';
+    $m->setFrom($m->Username, 'BoundlessBooks');
+
+    return $m;
 }
 
 // Database setup
