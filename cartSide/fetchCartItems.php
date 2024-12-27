@@ -24,7 +24,7 @@ if (!$cartId) {
 
 // Second query to get all items in the cart with book details using JOIN
 $sql = "
-    SELECT ci.*, b.book_name, b.book_price 
+    SELECT ci.*, b.book_name, b.book_price
     FROM cart_item ci
     JOIN book_item b ON ci.book_id = b.book_id
     WHERE ci.cart_id = :cart_id

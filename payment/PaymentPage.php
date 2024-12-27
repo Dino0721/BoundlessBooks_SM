@@ -23,77 +23,9 @@ global $_db;
 
     <div class="container">
 
-        <form action="#">
+        <form action="paymentDone.php" type="POST">
 
             <div class="row">
-
-                <!-- <div class="col">
-                    <h3 class="title">
-                        Billing Address
-                    </h3>
-
-                    <div class="inputBox">
-                        <label for="name">
-                            Full Name:
-                        </label>
-                        <input type="text" id="name"
-                            placeholder="Enter your full name" name="fullname"
-                            required>
-                    </div>
-
-                    <div class="inputBox">
-                        <label for="email">
-                            Email:
-                        </label>
-                        <input type="text" id="email"
-                            placeholder="Enter email address"
-                            name="email"
-                            required>
-                    </div>
-
-                    <div class="inputBox">
-                        <label for="address">
-                            Address:
-                        </label>
-                        <input type="text" id="address"
-                            placeholder="Enter address"
-                            name="address"
-                            required>
-                    </div>
-
-                    <div class="inputBox">
-                        <label for="city">
-                            City:
-                        </label>
-                        <input type="text" id="city"
-                            placeholder="Enter city"
-                            name="city"
-                            required>
-                    </div>
-
-                    <div class="flex">
-
-                        <div class="inputBox">
-                            <label for="state">
-                                State:
-                            </label>
-                            <input type="text" id="state"
-                                placeholder="Enter state"
-                                required>
-                        </div>
-
-                        <div class="inputBox">
-                            <label for="zip">
-                                Zip Code:
-                            </label>
-                            <input type="number" id="zip"
-                                placeholder="123 456"
-                                required>
-                        </div>
-
-                    </div>
-
-                </div> !-->
                 <div class="col">
                     <h3 class="title">Payment</h3>
 
@@ -174,10 +106,10 @@ global $_db;
 
             </div>
 
-            <a href='paymentDone.php'>Proceed to checkout</a>
-
+            <input type="submit" value="Proceed to checkout">
+            
             <a href="../cartSide/CartPage.php">Back to cart</a>
-                </form>
+        </form>
 
     </div>
 
