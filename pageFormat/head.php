@@ -29,6 +29,9 @@ require_once 'base.php';
 <body>
     <!-- Flash message -->
     <div id="info"><?= temp('info') ?></div>
+    <!-- <pre>
+<?php print_r($_SESSION); ?>
+</pre> -->
 
     <header class="header">
         <h1 class="header__logo">

@@ -4,14 +4,11 @@ require '../pageFormat/base.php';
 
 if (!isset($_SESSION['user_id'])) {
     temp('info', 'You need to log in to access the profile page.');
-    header('Location: ../productCatalog/productCatalog.php');
+    header('Location: login.php');
     exit();
 }
 
-$user_id = $_SESSION['user_id'];
-$stm = $_db->prepare('SELECT * FROM user WHERE user_id = ?');
-$stm->execute([$user_id]);
-$user = $stm->fetch(PDO::FETCH_ASSOC);
+$user = $_SESSION['user'];
 
 if (!$user) {
     temp('info', 'User not found. Please log in again.');
@@ -37,7 +34,7 @@ if (!$user) {
             <h2>Welcome, <?= htmlspecialchars($user['email']) ?>!</h2>
             <p><b>Email: </b> <?= htmlspecialchars($user['email']) ?></p>
             <!-- TODO -->
-            <p><b>: </b> <?= htmlspecialchars($user['']) ?></p>
+            <p><b>Something: </b> <?= htmlspecialchars($user['email']) ?></p>
             <p><b>Role: </b> <?= htmlspecialchars($user['role'] ?? 'User') ?></p>
         </section>
 

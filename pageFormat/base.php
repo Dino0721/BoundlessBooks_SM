@@ -201,7 +201,9 @@ function login($user, $url = '/')
 // User logout
 function logout($url = '/')
 {
+    session_start();
     unset($_SESSION['user']);
+    session_destroy();
     redirect($url);
 }
 
