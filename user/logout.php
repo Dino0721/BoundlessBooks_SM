@@ -1,6 +1,14 @@
 <?php
+// Start the session
+session_start();
 
-include 'base.php';
+// Clear all session variables
+$_SESSION = [];
 
-temp('info', 'Logout successfully');
-logout();
+// Destroy the session
+session_destroy();
+
+// Redirect to the login page
+header("Location: login.php");
+exit;
+?>

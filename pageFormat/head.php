@@ -57,6 +57,7 @@ require_once 'base.php';
                 if (isset($_SESSION['admin']) && $_SESSION['admin'] == 1) {
                     echo createNavItem("../orderManagement/orderHistory.php", "Order History");
                     echo createNavItem("../orderManagement/orderListing.php", "Order Listing");
+                    echo createNavItem("../rewardManagement/rewardManagementPage.php", "Reward Management");
                 }
                 ?>
 
