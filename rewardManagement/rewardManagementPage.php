@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <html>
-    
+
 <?
 require_once '../pageFormat/base.php';
 include '../pageFormat/head.php';
+
+session_start();
+
 ?>
 
 <?php
@@ -25,37 +28,6 @@ if (isset($_POST['insert'])) {
     ]);
 }
 
-// Update discount code
-if (isset($_POST['update'])) {
-    $code_id = $_POST['code_id'];
-    $code = $_POST['code'];
-    $discount = $_POST['discount_percentage'];
-    $status = $_POST['status'];
-
-    $stmt = $_db->prepare("UPDATE discount_code SET code = :code, discount_percentage = :discount, status = :status WHERE code_id = :code_id");
-    $stmt->execute([
-        ':code_id' => $code_id,
-        ':code' => $code,
-        ':discount' => $discount,
-        ':status' => $status,
-    ]);
-}
-
-// Disable discount code
-if (isset($_POST['disable'])) {
-    $code_id = $_POST['code_id'];
-
-    $stmt = $_db->prepare("UPDATE discount_code SET status = 'inactive' WHERE code_id = :code_id");
-    $stmt->execute([':code_id' => $code_id]);
-}
-
-// Delete discount code
-if (isset($_POST['delete'])) {
-    $code_id = $_POST['code_id'];
-
-    $stmt = $_db->prepare("DELETE FROM discount_code WHERE code_id = :code_id");
-    $stmt->execute([':code_id' => $code_id]);
-}
 
 // Retrieve list of discount codes
 $stmt = $_db->query("SELECT * FROM discount_code");
@@ -63,6 +35,8 @@ $discount_codes = $stmt->fetchAll();
 ?>
 
 <body>
+    <link rel="stylesheet" href="../rewardManagement/rewardManagementStyles.css">
+
     <h1>Reward Management</h1>
     <form method="POST">
         <input type="hidden" name="code_id" placeholder="Code ID (for update/disable/delete)">
@@ -73,9 +47,6 @@ $discount_codes = $stmt->fetchAll();
             <option value="inactive">Inactive</option>
         </select>
         <button type="submit" name="insert">Insert</button>
-        <button type="submit" name="update">Update</button>
-        <button type="submit" name="disable">Disable</button>
-        <button type="submit" name="delete">Delete</button>
     </form>
 
     <h2>List of Discount Codes</h2>
@@ -96,8 +67,8 @@ $discount_codes = $stmt->fetchAll();
         <?php endforeach; ?>
     </table>
 
-<body>
+    <body>
 
-</body>
+    </body>
 
 </html>

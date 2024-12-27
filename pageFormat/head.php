@@ -51,6 +51,8 @@ require_once 'base.php';
                 <?php endif; ?>
 
                 <?= createNavItem("../cartSide/CartPage.php", "Shopping Cart"); ?>
+
+                <?= createNavItem("../orderManagement/orderHistory.php", "Order History"); ?>
             </ul>
         </nav>
 
@@ -58,7 +60,6 @@ require_once 'base.php';
         <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] == 1): ?>
             <nav class="admin-nav">
                 <ul class="admin-nav__ul">
-                    <?= createNavItem("../orderManagement/orderHistory.php", "Order History"); ?>
                     <?= createNavItem("../orderManagement/orderListing.php", "Order Listing"); ?>
                     <?= createNavItem("../rewardManagement/rewardManagementPage.php", "Reward Management"); ?>
                 </ul>
