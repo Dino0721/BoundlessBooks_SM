@@ -61,41 +61,54 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $bookStatus = $_POST['book_status'] ?? 'AVAILABLE';
     $bookCategory = $_POST['book_category'] ?? '';
     $bookImage = null;
+    $pdfPath = null; // Initialize $pdfPath
 
-    // Validate book price
-    if ($bookPrice < 1) {
-        echo "<p style='color: red;'>Error: Book price must be at least $1.</p>";
-    } else {
-        // Handle the image upload if provided
-        if (isset($_FILES['book_photo']) && $_FILES['book_photo']['error'] === UPLOAD_ERR_OK) {
-            $uploadDir = 'uploads/';
-            $fileName = basename($_FILES['book_photo']['name']);
-            $uploadFile = $uploadDir . $fileName;
+    // Image upload handling
+    if (isset($_FILES['book_photo']) && $_FILES['book_photo']['error'] === UPLOAD_ERR_OK) {
+        $uploadDir = 'uploads/';
+        $fileName = basename($_FILES['book_photo']['name']);
+        $uploadFile = $uploadDir . $fileName;
 
-            // Check if file is an image
-            if (getimagesize($_FILES['book_photo']['tmp_name'])) {
-                // Move the uploaded file to the server directory
-                if (move_uploaded_file($_FILES['book_photo']['tmp_name'], $uploadFile)) {
-                    $bookImage = $uploadFile; // Save the image path in the database
-                } else {
-                    echo "<p style='color: red;'>Error uploading the image.</p>";
-                }
+        if (getimagesize($_FILES['book_photo']['tmp_name'])) {
+            if (move_uploaded_file($_FILES['book_photo']['tmp_name'], $uploadFile)) {
+                $bookImage = $uploadFile;
             } else {
-                echo "<p style='color: red;'>Uploaded file is not a valid image.</p>";
+                echo "<p style='color: red;'>Error uploading image.</p>";
             }
+        } else {
+            echo "<p style='color: red;'>Invalid image file.</p>";
         }
+    }
 
+    // PDF upload handling
+    if (isset($_FILES['book_pdf']) && $_FILES['book_pdf']['error'] === UPLOAD_ERR_OK) {
+        $pdfUploadDir = '../books/'; // Assuming "books/" is one level above
+        $pdfFileName = basename($_FILES['book_pdf']['name']);
+        $pdfUploadFile = $pdfUploadDir . $pdfFileName;
+
+        if (move_uploaded_file($_FILES['book_pdf']['tmp_name'], $pdfUploadFile)) {
+            $pdfPath = $pdfUploadDir . $pdfFileName;
+        } else {
+            echo "<p style='color: red;'>Error uploading PDF file.</p>";
+        }
+    } else {
+        echo "<p style='color: red;'>Please select a PDF file.</p>";
+    }
+
+    // Validate and insert data
+    if ($bookPrice >= 1 && isset($pdfPath)) {
         try {
             // Insert book into the database
-            $stmt = $_db->prepare("INSERT INTO book_item (book_name, book_desc, book_price, book_status, book_category, book_photo) 
-                VALUES (:name, :desc, :price, :status, :category, :image)");
+            $stmt = $_db->prepare("INSERT INTO book_item (book_name, book_desc, book_price, book_status, book_category, book_photo, pdf_path) 
+                                    VALUES (:name, :desc, :price, :status, :category, :image, :pdf_path)");
             $stmt->execute([
                 ':name' => $bookName,
                 ':desc' => $bookDesc,
                 ':price' => $bookPrice,
                 ':status' => $bookStatus,
                 ':category' => $bookCategory,
-                ':image' => $bookImage, // Save the image path
+                ':image' => $bookImage,
+                ':pdf_path' => $pdfPath,
             ]);
 
             // Set success message in session
@@ -105,9 +118,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } catch (PDOException $e) {
             die('Error: ' . $e->getMessage());
         }
+    } else {
+        if ($bookPrice < 1) {
+            echo "<p style='color: red;'>Error: Book price must be at least $1.</p>";
+        }
+        if (!isset($pdfPath)) {
+            echo "<p style='color: red;'>Error: PDF file upload failed.</p>";
+        }
     }
 }
-
 // if (isset($_GET['delete_id'])) {
 //     $deleteId = $_GET['delete_id'];
 
@@ -193,6 +212,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <input type="file" id="book_image" name="book_image" accept="image/*">
             </div>
 
+            <div class="add-book-row">
+                <label for="book_pdf">Book PDF:</label>
+                <input type="file" id="book_pdf" name="book_pdf" accept=".pdf" required>
+            </div>
+
             <button type="submit">Add Book</button>
         </form>
     </div>
@@ -218,6 +242,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <th>Price</th>
                     <th>Status</th>
                     <th>Category</th>
+                    <th>File Path</th>
                     <th></th>
                 </tr>
             </thead>
@@ -242,6 +267,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <td>$<?= number_format($book['book_price'], 2) ?></td>
                             <td><?= htmlspecialchars($book['book_status']) ?></td>
                             <td><?= htmlspecialchars($book['book_category']) ?></td>
+                            <td>
+                                <?php
+                                $fileInfo = pathinfo($book['pdf_path']);
+                                ?>
+                                <a href="../<?= htmlspecialchars($book['pdf_path']) ?>" target="_blank">
+                                    <?= htmlspecialchars($fileInfo['filename']) ?>
+                                </a>
+                                <?php
+                                ?>
+                            </td>
                             <td>
                                 <button class="edit-button" data-book-id="<?= $book['book_id'] ?>">Edit</button>
                             </td>

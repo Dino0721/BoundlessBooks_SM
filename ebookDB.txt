@@ -27,6 +27,7 @@ CREATE TABLE IF NOT EXISTS book_item (
   book_status ENUM('AVAILABLE', 'DISABLED') NOT NULL DEFAULT 'AVAILABLE',
   book_category ENUM('Fiction', 'Non-Fiction', 'Science', 'Fantasy', 'Romance', 'History') NOT NULL DEFAULT 'Fiction',
   book_photo VARCHAR(100) NULL,
+  pdf_path VARCHAR(255) NULL, 
   PRIMARY KEY (book_id)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -83,15 +84,6 @@ INSERT INTO user (user_id, email, password, phone_number, reset_token, token_exp
 (4, 'user4@example.com', 'hashed_password_4', '4567890123', '', NULL),
 (5, 'user5@example.com', 'hashed_password_5', '5678901234', '', NULL);
 
--- Insert Data: book_item
-INSERT INTO book_item (book_id, book_name, book_desc, book_price, book_status, book_photo) VALUES
-(1, 'The Psychology of Money', 'This is the description of Book 1.', 9.99, 'AVAILABLE', 'book1.jpg'),
-(2, 'Library of Lost Hearts', 'This is the description of Book 2.', 19.99, 'DISABLED', 'book2.jpg'),
-(3, 'The Sun And Her Flowers', 'This is the description of Book 3.', 14.99, 'AVAILABLE', 'book3.jpg'),
-(4, 'I Dare You', 'This is the description of Book 4.', 24.99, 'AVAILABLE', 'book4.jpg'),
-(5, 'The Return', 'This is the description of Book 5.', 29.99, 'DISABLED', 'book5.jpg'),
-(6, 'Think Like an Engineer', 'This is the description of Book 5.', 49.99, 'AVAILABLE', 'book6.jpg');
-
 -- Insert Data: book_ownership
 INSERT INTO book_ownership (user_id, book_id, purchase_date, purchase_time) VALUES
 (1, 1, '2024-12-15', '01:38:42'),
@@ -144,5 +136,13 @@ MODIFY COLUMN book_category ENUM(
     'Philosophy', 
     'Religion & Spirituality'
 );
+
+-- Insert Data: book_item
+INSERT INTO book_item (book_name, book_desc, book_price, book_category, book_status, book_photo, pdf_path) VALUES
+('Atomic Habits', 'Atomic Habits (James Clear)', 19.99, 'Self-Help', 'AVAILABLE', 'atomichabits.jpg', 'books/Atomic Habits (James Clear).pdf'),
+('Normal People', 'Normal People (Sally Rooney)', 14.99, 'Romance', 'AVAILABLE', 'normalpeople.jpg', 'books/Normal People (Sally Rooney).pdf'),
+('Orbital', 'Orbital (Samantha Harvey)', 16.99, 'Fiction', 'AVAILABLE', 'orbital.jpg', 'books/Orbital (Samantha Harvey).pdf'),
+('The Body Keeps the Score', 'The Body Keeps the Score Brain, Mind, and Body in the Healing of Trauma (Bessel van der Kolk MD)', 24.99, 'Self-Help', 'AVAILABLE', 'thebodykeepsthescore.jpg', 'books/The Body Keeps the Score Brain, Mind, and Body in the Healing of Trauma (Bessel van der Kolk MD).pdf'),
+('The Overthinking Cure', 'The Overthinking Cure How to Stay in the Present, Shake Negativity, and Stop Your Stress and Anxiety (Nick Trenton)', 18.99, 'Self-Help', 'AVAILABLE', 'theoverthinkingcure.jpg', 'books/The Overthinking Cure How to Stay in the Present, Shake Negativity, and Stop Your Stress and Anxiety (Nick Trenton).pdf');
 
 COMMIT;
