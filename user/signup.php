@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../vendor/autoload.php';
+// require_once __DIR__ . '/../vendor/autoload.php';
 require '../pageFormat/base.php';
 require '../pageFormat/head.php';
 
@@ -77,7 +77,6 @@ if (is_post()) {
 ?>
 
 <?php
-
 if (isset($_POST['back_to_login'])) {
     redirect('login.php'); // Redirect to login.php using the base.php function
     exit();
@@ -101,6 +100,7 @@ if (isset($_POST['back_to_login'])) {
     <?= err('confirm_password') ?><br>
 
     <button type="submit" name="back_to_login">Back to Login</button>
+    <button type="reset">Reset</button>
     <button type="submit">Sign Up</button>
     <?= isset($_err['general']) ? '<p>' . $_err['general'] . '</p>' : '' ?>
 </form>

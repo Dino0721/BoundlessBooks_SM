@@ -1,7 +1,5 @@
 <?php
 
-// session_start();
-
 require '../pageFormat/base.php';
 require '../pageFormat/head.php';
 

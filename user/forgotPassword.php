@@ -2,7 +2,7 @@
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-require '../vendor/autoload.php';
+// require '../vendor/autoload.php';
 require '../pageFormat/base.php';
 include '../pageFormat/head.php';
 
