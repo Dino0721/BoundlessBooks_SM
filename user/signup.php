@@ -3,7 +3,6 @@ require_once __DIR__ . '/../vendor/autoload.php';
 require '../pageFormat/base.php';
 require '../pageFormat/head.php';
 
-use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
 if (is_post()) {
@@ -11,11 +10,11 @@ if (is_post()) {
     $_err = [];
 
     if ($form_type == 'signup') {
-
         // Handle Sign-Up Form Submission
         $email = req('email');
         $password = req('password');
         $confirm_password = req('confirm_password') ?? '';
+
         // Email Validation
         if ($email == '') {
             $_err['email'] = 'Email is required.';
@@ -52,41 +51,31 @@ if (is_post()) {
             $_SESSION['otp'] = $otp;
             $_SESSION['otp_expiry'] = time() + 180;
 
-            $mail = new PHPMailer(true);
+            // Use get_mail() for email setup
+            $mail = get_mail();
             try {
-                // Server settings
-                $mail->isSMTP();
-                $mail->Host = 'smtp.gmail.com';
-                $mail->SMTPAuth = true;
-                $mail->Username = 'tequilaguey777@gmail.com'; // Use your email
-                $mail->Password = 'dbkhijmymjdaohkj'; // Use your email password
-                $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-                $mail->Port = 587;
-
-                // Recipients
-                $mail->setFrom('tequilaguey777@gmail.com', 'BoundlessBooks');
+                // Email setup
                 $mail->addAddress($email);
-
-                // Content
-                $mail->isHTML(true);
                 $mail->Subject = 'Your OTP for Sign Up';
                 $mail->Body = "Your OTP code is: $otp. It will expire in 3 minutes.";
 
+                // Send the email
                 $mail->send();
-                echo 'OTP has been sent to your email.';
+                temp('info', 'OTP has been sent to your email.');
             } catch (Exception $e) {
-                echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+                $_err['general'] = "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
             }
 
-            // Redirect to OTP verification page
-            redirect('verifyOtp.php');
-            // exit();
+            // Redirect to OTP verification page if no errors occurred during email sending
+            if (empty($_err['general'])) {
+                redirect('verifyOtp.php');
+                exit();
+            }
         }
     }
 }
 ?>
 
-<!-- style="display: none;" -->
 <!-- Sign-Up Form -->
 <form action="signup.php" method="post" id="sign-up-form">
     <h1>Sign Up</h1>
