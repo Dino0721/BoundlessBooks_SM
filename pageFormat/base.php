@@ -4,6 +4,20 @@
 date_default_timezone_set('Asia/Kuala_Lumpur');
 session_start();
 
+// Define the login page URL
+$loginPage = '../user/login.php'; // Adjust the path as needed
+
+// Get the current URL path
+$currentUrl = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+
+// Check if the user is not logged in and not on the login page
+if (empty($_SESSION['user_id']) && $currentUrl !== '/user/login.php') {
+    // Redirect to the login page
+    header("Location: $loginPage");
+    exit();
+}
+
+
 function is_get()
 {
     return $_SERVER['REQUEST_METHOD'] == 'GET';
