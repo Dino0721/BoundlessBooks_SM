@@ -67,6 +67,7 @@ th, td {
 
 th {
     background-color: #f2f2f2;
+    text-align: center;
 }
 
 /* Description format */
@@ -100,5 +101,17 @@ th {
 
 .select-book{
     cursor: pointer;
+    
 }
 
+/* Make the disabled row darker and prevent selection */
+.disabled-row {
+    background-color: #f0f0f0;  /* Lighter background for disabled rows */
+    color: #888;  /* Grayed-out text */
+}
+
+/* Style the checkbox as disabled */
+.disabled-row input[type="checkbox"] {
+    pointer-events: none;  /* Disable interaction with checkbox */
+    opacity: 0.5;  /* Make checkbox appear disabled */
+}
