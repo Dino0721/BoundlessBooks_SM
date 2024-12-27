@@ -1,9 +1,18 @@
+<link rel="stylesheet" type="" href="../cartSide/CartStyles.css">
+
 <?php
 $_title = 'Shopping Cart';
 include '../pageFormat/head.php';
 include '../cartSide/deleteCartBook.php';
 
 global $_db;
+
+// Fetch the books the user already owns
+$ownedBooksQuery = "SELECT book_id FROM book_ownership WHERE user_id = :user_id";
+$ownedBooksStmt = $_db->prepare($ownedBooksQuery);
+$ownedBooksStmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+$ownedBooksStmt->execute();
+$ownedBooks = $ownedBooksStmt->fetchAll(PDO::FETCH_COLUMN, 0);  // Get book_ids of owned books
 
 // Assume user_id = 1 for testing
 $user_id = 1;
@@ -23,10 +32,11 @@ try {
     // Fetch details of books in the cart
     $cartItemsQuery = "
         SELECT 
-            b.book_id, 
+            b.book_photo, 
             b.book_name, 
             b.book_desc, 
             b.book_price, 
+            b.book_category, 
             b.book_status 
         FROM cart_item ci
         INNER JOIN book_item b ON ci.book_id = b.book_id
@@ -39,39 +49,61 @@ try {
     if (empty($cartItems)) {
         echo "<p>Your cart is empty.</p>";
     } else {
-        echo "<h2>Cart Details for User ID: $user_id</h2>";
+        //echo "<h2>Cart Details for User ID: $user_id</h2>";
         echo "<table border='1'>
                 <tr>
                     <th>Select</th>
-                    <th>Book ID</th>
+                    <th>Book Photo</th>
                     <th>Book Name</th>
                     <th>Book Description</th>
+                    <th>Book Category</th>
                     <th>Book Price</th>
                     <th>Book Status</th>
                     <th>Action</th>
                 </tr>";
-        foreach ($cartItems as $item) {
-            $disabled = $item['book_status'] === 'DISABLED' ? 'disabled' : '';
-            echo "<tr>
-                    <td>
-                        <input type='checkbox' 
-                               class='select-book' 
-                               data-price='{$item['book_price']}' 
-                               $disabled>
-                    </td>
-                    <td>{$item['book_id']}</td>
-                    <td>{$item['book_name']}</td>
-                    <td>{$item['book_desc']}</td>
-                    <td>{$item['book_price']}</td>
-                    <td>{$item['book_status']}</td>
-                    <td>
-                        <form method='POST' action='deleteCartBook.php'>
-                            <input type='hidden' name='delete_book_id' value='{$item['book_id']}'>
-                            <button type='submit'>Delete</button>
-                        </form>
-                    </td>
-                  </tr>";
-        }
+            foreach ($cartItems as $item) {
+                $defaultImage = "../images/default.jpg"; // Path to the default image
+                $imageSrc = $item['book_photo'] ? "../images/" . htmlspecialchars(trim($item['book_photo'])) : $defaultImage;
+            
+                // Truncate description to 40 characters and add hover tooltip
+                $fullDesc = htmlspecialchars($item['book_desc']);
+                $shortDesc = strlen($fullDesc) > 40 ? substr($fullDesc, 0, 37) . '...' : $fullDesc;
+            
+                // Check if the user already owns this book
+                $isOwned = in_array($item['book_id'], $ownedBooks);
+            
+                // Set the checkbox as disabled if the user owns the book
+                $disabled = $isOwned ? 'disabled' : '';
+                $darkenClass = $isOwned ? 'darken' : '';  // Apply darken class if the book is owned
+            
+                echo "<tr>
+                        <td>
+                            <input type='checkbox' 
+                                    class='select-book' 
+                                    data-price='{$item['book_price']}' 
+                                    $disabled>
+                        </td>
+                        <td class='$darkenClass'>
+                            <img src='$imageSrc' alt='" . htmlspecialchars($item['book_name']) . "' style='width: 100px; height: auto;'>
+                        </td>
+                        <td class='$darkenClass'>" . htmlspecialchars($item['book_name']) . "</td>
+                        <td>
+                            <span class='tooltip' title='$fullDesc'>$shortDesc</span>
+                        </td>
+                        <td>" . htmlspecialchars($item['book_category']) . "</td>
+                        <td>" . htmlspecialchars(number_format($item['book_price'], 2)) . "</td>
+                        <td class='" . strtolower(htmlspecialchars($item['book_status'])) . "'>
+                            " . ($item['book_status'] === 'AVAILABLE' ? 'Available' : 'Unavailable') . "
+                        </td>
+                        <td>
+                            <form method='POST' action='deleteCartBook.php'>
+                                <input type='hidden' name='delete_book_id' value='" . htmlspecialchars($item['book_name']) . "'>
+                                <button type='submit'>Delete</button>
+                            </form>
+                        </td>
+                    </tr>";
+                        
+    }
         echo "</table>";
         echo "<div id='summary-container'>
                 <p id='total-summary'>
@@ -150,7 +182,4 @@ try {
         background-color: #0056b3;
     }
 
-    body {
-        margin-bottom: 80px; /* Ensure space for fixed summary */
-    }
 </style>
