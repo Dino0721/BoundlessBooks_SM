@@ -30,7 +30,6 @@ require_once 'base.php';
     <!-- Flash message -->
     <div id="info"><?= temp('info') ?></div>
 
-
     <header class="header">
         <h1 class="header__logo">
             <a href="index.php">BoundlessBooks
@@ -52,47 +51,24 @@ require_once 'base.php';
                 <?php endif; ?>
 
                 <?= createNavItem("../cartSide/CartPage.php", "Shopping Cart"); ?>
-                
-                <?php
-                if (isset($_SESSION['admin']) && $_SESSION['admin'] == 1) {
-                    echo createNavItem("../orderManagement/orderHistory.php", "Order History");
-                    echo createNavItem("../orderManagement/orderListing.php", "Order Listing");
-                    echo createNavItem("../rewardManagement/rewardManagementPage.php", "Reward Management");
-                }
-                ?>
-
             </ul>
         </nav>
+
+        <!-- Admin Navbar -->
+        <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] == 1): ?>
+            <nav class="admin-nav">
+                <ul class="admin-nav__ul">
+                    <?= createNavItem("../orderManagement/orderHistory.php", "Order History"); ?>
+                    <?= createNavItem("../orderManagement/orderListing.php", "Order Listing"); ?>
+                    <?= createNavItem("../rewardManagement/rewardManagementPage.php", "Reward Management"); ?>
+                </ul>
+            </nav>
+        <?php endif; ?>
     </header>
-
-    <nav>
-        <!-- <a href="/">Index</a>
-
-            TODO
-        <?php if (1): ?>
-            <a href="/demo1.php">Demo 1</a>
-        <?php endif ?>
-
-        <?php if (1): ?>
-            <a href="/demo2.php">Demo 2</a>
-        <?php endif ?>
-
-        <?php if (1): ?>
-            <a href="/demo3.php">Demo 3</a>
-        <?php endif ?>
-
-        <div></div>
-
-        TODO 
-        <?php if (1): ?>
-            <a href="/user/profile.php">Profile</a>
-            <a href="/user/password.php">Password</a>
-            <a href="/logout.php">Logout</a>
-        <?php  ?>
-            <a href="/user/register.php">Register</a>
-            <a href="/login.php">Login</a>
-        <?php endif ?> -->
-    </nav>
 
     <main>
         <!-- <h1><?= $_title ?? 'Untitled' ?></h1> -->
+
+</body>
+
+</html>

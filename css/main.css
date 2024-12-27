@@ -2,7 +2,11 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
 
-body, input, button, textarea, select {
+body,
+input,
+button,
+textarea,
+select {
     font: 16px 'Roboto', sans-serif;
 }
 
@@ -45,6 +49,7 @@ header a {
     text-decoration: none;
 } */
 
+/* General Header Styling */
 .header {
     display: flex;
     justify-content: space-between;
@@ -60,10 +65,6 @@ header a {
     color: hsl(220deg 13.04% 90.98%);
     text-decoration: none;
 }
-
-/* .header__img {
-    display: block;
-} */
 
 .header__ul {
     padding: 0;
@@ -93,20 +94,81 @@ header a {
     color: hsl(220deg 13.04% 90.98% / 95%);
 }
 
+/* Header Layout */
+.header {
+    display: flex;
+    flex-direction: column;
+    /* Stack child elements vertically */
+    padding-block: 1.8rem;
+    padding-inline: 3rem;
+    border-radius: 0.5rem;
+    background-color: hsl(220.91deg 39.29% 10.98% / 50%);
+    max-width: 87.5vw;
+}
 
-@media screen and (max-width: 1120px ) {
-    .header {
-        padding-block: 2rem;
-        flex-direction: column;
-    }
-    .header__ul {
-        margin-block-end:  0;
-        margin-block-start: 1rem;
+.header__main-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.admin-nav {
+    background-color: #FFC107;
+    /* Orange-yellow background */
+    width: 100vw;
+    /* Full viewport width */
+    margin: 1rem;
+    /* Remove margins */
+    padding: 10px 0;
+    /* Add padding for spacing */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    /* Optional: subtle shadow */
+}
+
+.admin-nav__ul {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+
+.admin-nav__ul li {
+    margin: 0 15px;
+    /* Spacing between links */
+}
+
+.admin-nav__ul a {
+    text-decoration: none;
+    /* Remove underline */
+    color: #000;
+    /* Black text color */
+    font-weight: bold;
+    /* Make text bold */
+    transition: color 0.3s ease;
+    /* Smooth hover effect */
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+}
+
+.admin-nav__ul a:hover {
+    color: #333;
+    /* Darker hover color */
+    background-color: rgba(0, 0, 0, 0.1);
+    /* Subtle background on hover */
+}
+
+/* Responsive Styling for Admin Navbar */
+@media screen and (max-width: 1120px) {
+    .admin-nav__ul {
         flex-wrap: wrap;
         justify-content: center;
     }
 }
- 
+
+
 /* nav {
     padding: 0 50px;
     background: #999;
@@ -142,6 +204,7 @@ main h1 {
     margin: 10px 0;
     border-radius: 5px;
 }
+
 #info:empty {
     display: none;
 }
@@ -226,8 +289,8 @@ button:hover {
 }
 
 .book-detail-image {
-    width: 300px; 
-    height: 400px; 
+    width: 300px;
+    height: 400px;
     height: auto;
     object-fit: cover;
     border: 1px solid #ccc;
@@ -244,17 +307,19 @@ button:hover {
     transition: all 0.3s ease;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     text-align: center;
-    cursor: pointer; /* Make it clear the div is clickable */
+    cursor: pointer;
+    /* Make it clear the div is clickable */
     max-width: 300px;
 }
 
 .book-image {
-    display: block;         
-    margin-left: auto;      
-    margin-right: auto;    
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
     width: 200px;
-    height: 200px;;
-    max-width: 100%;   
+    height: 200px;
+    ;
+    max-width: 100%;
     border-radius: 15px;
     height: auto;
 }
@@ -283,6 +348,7 @@ button:hover {
 .product-item:hover a {
     color: #fff;
 }
+
 .product-item .status {
     text-align: center;
     font-weight: bold;
@@ -293,15 +359,17 @@ button:hover {
 }
 
 .price {
-    font-weight: bold; 
-  }
+    font-weight: bold;
+}
 
 .product-item .status.available {
-    background-color: #28a745; /* Green for Available */
+    background-color: #28a745;
+    /* Green for Available */
 }
 
 .product-item .status.disabled {
-    background-color: #dc3545; /* Red for Unavailable */
+    background-color: #dc3545;
+    /* Red for Unavailable */
 }
 
 /* Start Product detail */
@@ -345,7 +413,8 @@ button:hover {
 button.disabled {
     background-color: #d3d3d3;
     cursor: not-allowed;
-    pointer-events: none; /* Prevents click events */
+    pointer-events: none;
+    /* Prevents click events */
 }
 
 .product-detail a {
@@ -362,6 +431,7 @@ button.disabled {
 .product-detail a:hover {
     background: #0056b3;
 }
+
 /* End Product detail */
 
 /* Start Style for the Add Book Container */
@@ -376,27 +446,34 @@ button.disabled {
 /* Style for the Add Book Form */
 .add-book-form {
     display: flex;
-    flex-wrap: wrap; /* Allows items to wrap into rows */
-    gap: 20px; /* Space between each field */
+    flex-wrap: wrap;
+    /* Allows items to wrap into rows */
+    gap: 20px;
+    /* Space between each field */
 }
 
 /* Styling for each field in a row */
 .add-book-field {
     display: flex;
-    flex-direction: column; /* Label on top, input below */
-    width: calc(50% - 20px); /* Half width for each field with spacing */
+    flex-direction: column;
+    /* Label on top, input below */
+    width: calc(50% - 20px);
+    /* Half width for each field with spacing */
 }
 
 /* Full width for larger fields like textarea */
 .add-book-field.textarea {
-    width: 100%; /* Make textarea fields span full width */
+    width: 100%;
+    /* Make textarea fields span full width */
 }
 
 /* Label Styling */
 .add-book-field label {
     margin-bottom: 5px;
-    font-weight: bold; /* Optional: Make labels bold */
-    display: block; /* Ensure label occupies full row */
+    font-weight: bold;
+    /* Optional: Make labels bold */
+    display: block;
+    /* Ensure label occupies full row */
 }
 
 /* Input, Select, and Textarea Styling */
@@ -406,7 +483,8 @@ button.disabled {
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    width: 100%; /* Ensure inputs take full width of their container */
+    width: 100%;
+    /* Ensure inputs take full width of their container */
 }
 
 /* Textarea Specific Styling */
@@ -427,7 +505,8 @@ button.disabled {
     text-transform: uppercase;
     transition: background-color 0.3s ease;
     margin-top: 10px;
-    width: 100%; /* Button spans full width on its row */
+    width: 100%;
+    /* Button spans full width on its row */
 }
 
 .add-book-form button:hover {
@@ -437,16 +516,20 @@ button.disabled {
 /* Responsive Design */
 @media (max-width: 768px) {
     .add-book-field {
-        width: 100%; /* Make each field span full width on small screens */
+        width: 100%;
+        /* Make each field span full width on small screens */
     }
 }
 
 .book-image {
     width: 50px;
     height: 50px;
-    object-fit: cover; /* Ensures the image scales and is not distorted */
-    border-radius: 5px; /* Optional: adds rounded corners to the image */
+    object-fit: cover;
+    /* Ensures the image scales and is not distorted */
+    border-radius: 5px;
+    /* Optional: adds rounded corners to the image */
 }
+
 /* End Manage Book Page */
 
 /* Start Manage Category Page */
@@ -470,7 +553,8 @@ button.disabled {
 
 /* Input field specific to add-category form */
 .add-category-input {
-    flex: 4; /* Takes 80% of the space */
+    flex: 4;
+    /* Takes 80% of the space */
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
@@ -490,8 +574,9 @@ button.disabled {
 }
 
 .add-category-button:hover {
-    background-color: #45a049; 
+    background-color: #45a049;
 }
+
 /* End Manage Category Page */
 
 /* General container for alignment */
@@ -567,7 +652,8 @@ button.disabled {
 
 /* Style for the active button */
 .toggle-books.active {
-    background-color: #007bffe0; /* Change to your preferred color */
+    background-color: #007bffe0;
+    /* Change to your preferred color */
     color: white;
     font-weight: bold;
     transform: scale(1.1);
@@ -586,7 +672,8 @@ button.disabled {
 /* Hover effect for button */
 .toggle-books:hover {
     background-color: #ddd;
-    transform: scale(1.1); /* Scale up the button by 10% */
+    transform: scale(1.1);
+    /* Scale up the button by 10% */
 }
 
 
@@ -605,7 +692,8 @@ button.disabled {
 /* End Product Catalog */
 
 /* Start Form Section Styling */
-.form-section, .table-section {
+.form-section,
+.table-section {
     margin-bottom: 40px;
 }
 
@@ -617,7 +705,9 @@ button.disabled {
     margin: 0 auto;
 }
 
-.input-field, .textarea-field, .select-field {
+.input-field,
+.textarea-field,
+.select-field {
     padding: 10px;
     font-size: 1rem;
     border: 1px solid #ccc;
@@ -650,7 +740,8 @@ button.disabled {
     margin-top: 20px;
 }
 
-.book-table th, .book-table td {
+.book-table th,
+.book-table td {
     padding: 10px;
     text-align: left;
     border: 1px solid #ddd;
@@ -693,6 +784,7 @@ button.disabled {
 .back-link:hover {
     text-decoration: underline;
 }
+
 /* End Form Section Styling */
 
 
@@ -710,6 +802,7 @@ button.disabled {
 .alert-message.error {
     background-color: #f44336;
 }
+
 .edit-book-form {
     max-width: 800px;
     margin: 0 auto;
@@ -725,7 +818,9 @@ button.disabled {
     font-weight: bold;
 }
 
-.edit-book-form input, .edit-book-form textarea, .edit-book-form select {
+.edit-book-form input,
+.edit-book-form textarea,
+.edit-book-form select {
     width: 100%;
     padding: 8px;
     margin-bottom: 15px;
@@ -754,4 +849,5 @@ button.disabled {
 .edit-book-form a:hover {
     text-decoration: underline;
 }
+
 /* End Edit Book Form Styling */
