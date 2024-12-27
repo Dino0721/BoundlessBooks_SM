@@ -9,25 +9,30 @@ try {
     // Begin transaction
     $_db->beginTransaction();
 
+    $selectBooksSql = "SELECT book_id FROM cart_item WHERE cart_id IN (SELECT cart_id FROM cart WHERE user_id = :user_id AND paid = 0)";
+    $selectBooksStmt = $_db->prepare($selectBooksSql);
+    $selectBooksStmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+    $selectBooksStmt->execute();
+
     // Update the current active cart's paid column to 1
     $updateCartSql = "UPDATE cart SET paid = 1 WHERE user_id = :user_id AND paid = 0";
     $updateCartStmt = $_db->prepare($updateCartSql);
     $updateCartStmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
     $updateCartStmt->execute();
 
-    $selectBooksSql = "SELECT book_id FROM cart_item WHERE cart_id IN (SELECT cart_id FROM cart WHERE user_id = :user_id AND paid = 1)";
-    $selectBooksStmt = $_db->prepare($selectBooksSql);
-    $selectBooksStmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
-    $selectBooksStmt->execute();
-    
+    $currentDate = date('Y-m-d'); // Format: YYYY-MM-DD
+    $currentTime = date('H:i:s'); // Format: HH:MM:SS
+
     // Insert the book IDs into the book_ownership table
-    $insertOwnershipSql = "INSERT INTO book_ownership (user_id, book_id) VALUES (:user_id, :book_id)";
+    $insertOwnershipSql = "INSERT INTO book_ownership (user_id, book_id, purchase_date, purchase_time) VALUES (:user_id, :book_id, :purchase_date, :purchase_time)";
     $insertOwnershipStmt = $_db->prepare($insertOwnershipSql);
 
     // Loop through the results and insert into book_ownership table
     while ($row = $selectBooksStmt->fetch(PDO::FETCH_ASSOC)) {
         $insertOwnershipStmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
         $insertOwnershipStmt->bindParam(':book_id', $row['book_id'], PDO::PARAM_INT);
+        $insertOwnershipStmt->bindParam(':purchase_date', $currentDate, PDO::PARAM_STR);
+        $insertOwnershipStmt->bindParam(':purchase_time', $currentTime, PDO::PARAM_STR);
         $insertOwnershipStmt->execute();
     }
 
