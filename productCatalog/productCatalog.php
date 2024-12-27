@@ -2,9 +2,7 @@
 $_title = 'Product Catalog';
 require_once '../pageFormat/base.php';
 include '../pageFormat/head.php';
-include 'searchForm.php';
 
-// $_title = 'Product Catalog';
 // Get search and filter inputs
 $search = isset($_GET['search']) ? trim($_GET['search']) : null;
 $category = isset($_GET['category']) ? trim($_GET['category']) : 'all';

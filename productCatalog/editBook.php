@@ -46,7 +46,7 @@ try {
     $stmt = $_db->query("SHOW COLUMNS FROM book_item WHERE Field = 'book_status'");
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
     preg_match("/^enum\((.*)\)$/", $result['Type'], $matches);
-
+    
     // Extract the values and format them
     $bookStatuses = array_map(function ($value) {
         return trim($value, "'");
@@ -55,6 +55,7 @@ try {
     echo "Error fetching book statuses: " . $e->getMessage();
     exit;
 }
+
 
 // Handle form submission for updating book details
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
