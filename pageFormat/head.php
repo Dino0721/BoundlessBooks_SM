@@ -4,6 +4,39 @@ require_once 'base.php';
 
 ?>
 
+<?php
+// Assuming user_id is stored in session when logged in
+if (isset($_SESSION['user_id'])) {
+    $user_id = $_SESSION['user_id'];
+
+    try {
+        // Fetch the active cart ID for the user
+        $cartQuery = "SELECT cart_id FROM cart WHERE user_id = :user_id AND paid = 0";
+        $cartStmt = $_db->prepare($cartQuery);
+        $cartStmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+        $cartStmt->execute();
+        $cartId = $cartStmt->fetchColumn();
+
+        if ($cartId) {
+            // Fetch the number of items in the cart
+            $itemCountQuery = "SELECT COUNT(*) FROM cart_item WHERE cart_id = :cart_id";
+            $itemCountStmt = $_db->prepare($itemCountQuery);
+            $itemCountStmt->bindParam(':cart_id', $cartId, PDO::PARAM_INT);
+            $itemCountStmt->execute();
+            $itemCount = $itemCountStmt->fetchColumn();
+        } else {
+            // If no active cart, set item count to 0
+            $itemCount = 0;
+        }
+    } catch (Exception $e) {
+        echo "Error: " . $e->getMessage();
+        $itemCount = 0; // Set item count to 0 in case of error
+    }
+} else {
+    $itemCount = 0; // No user logged in
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -53,7 +86,7 @@ require_once 'base.php';
                     <?= createNavItem("../user/login.php", "Login"); ?>
                 <?php endif; ?>
 
-                <?= createNavItem("../cartSide/cartMain.php", "Shopping Cart"); ?>
+                <?= createNavItem("../cartSide/cartMain.php", "Shopping Cart" . ($itemCount ? " ($itemCount)" : "")); ?>
 
                 <?= createNavItem("../orderManagement/orderHistory.php", "Order History"); ?>
             </ul>
