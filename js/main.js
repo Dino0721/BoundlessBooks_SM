@@ -2,6 +2,21 @@
 // General Functions
 // ============================================================================
 
+$(() => {
+
+    // autofocus
+    $('form :input:not(button):first').focus();
+    $('.err:first').prev().focus();
+    $('.err:first').prev().find('.input:first').focus();
+
+    // reset
+    $('[type=reset]').on('click', e => {
+        e.preventDefault();
+        location = location;
+    });
+});
+
+
 // document.addEventListener("DOMContentLoaded", function () {
 //     // Toggle visibility of sign-up form
 //     document.getElementById("sign-up-btn").addEventListener("click", function () {
