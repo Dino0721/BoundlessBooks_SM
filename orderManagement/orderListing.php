@@ -3,7 +3,7 @@ include '../pageFormat/base.php';
 include '../pageFormat/head.php';
 
 // Ensure admin privileges
-if (!isset($_SESSION['admin']) || $_SESSION['admin'] != 0) {
+if (!isset($_SESSION['admin']) || $_SESSION['admin'] != 1) {
     die("Access denied. Admins only.");
 }
 
@@ -24,14 +24,49 @@ global $_db;
 
 <div class="table-container">
     <h1>Order Listings</h1>
+
+    <!-- Search form -->
+    <form method="GET" action="">
+        <input type="text" name="search" placeholder="Search..." value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>">
+        
+        <select name="search_type">
+            <option value="user" <?php echo isset($_GET['search_type']) && $_GET['search_type'] == 'user' ? 'selected' : ''; ?>>Search by User</option>
+            <option value="book" <?php echo isset($_GET['search_type']) && $_GET['search_type'] == 'book' ? 'selected' : ''; ?>>Search by Book</option>
+            <option value="order" <?php echo isset($_GET['search_type']) && $_GET['search_type'] == 'order' ? 'selected' : ''; ?>>Search by Order ID</option>
+        </select>
+        
+        <button type="submit">Search</button>
+    </form>
+
     <?php
 
-    // Query to fetch book ownership details
-    $sql = "SELECT bo.ownership_id, u.email, b.book_name, b.book_price, bo.purchase_date, bo.purchase_time 
-            FROM book_ownership bo 
-            JOIN book_item b ON b.book_id = bo.book_id 
-            JOIN user u ON u.user_id = bo.user_id";
+    // Get the search term and search type
+    $searchTerm = isset($_GET['search']) ? '%' . $_GET['search'] . '%' : '%';
+    $searchType = isset($_GET['search_type']) ? $_GET['search_type'] : 'user'; // Default to search by user if not selected
+
+    // Modify the SQL query based on the selected search type
+    if ($searchType == 'user') {
+        $sql = "SELECT bo.ownership_id, u.email, b.book_name, b.book_price, bo.purchase_date, bo.purchase_time 
+                FROM book_ownership bo 
+                JOIN book_item b ON b.book_id = bo.book_id 
+                JOIN user u ON u.user_id = bo.user_id
+                WHERE u.email LIKE :search_term";
+    } elseif ($searchType == 'book') {
+        $sql = "SELECT bo.ownership_id, u.email, b.book_name, b.book_price, bo.purchase_date, bo.purchase_time 
+                FROM book_ownership bo 
+                JOIN book_item b ON b.book_id = bo.book_id 
+                JOIN user u ON u.user_id = bo.user_id
+                WHERE b.book_name LIKE :search_term";
+    } else { // search by order ID
+        $sql = "SELECT bo.ownership_id, u.email, b.book_name, b.book_price, bo.purchase_date, bo.purchase_time 
+                FROM book_ownership bo 
+                JOIN book_item b ON b.book_id = bo.book_id 
+                JOIN user u ON u.user_id = bo.user_id
+                WHERE bo.ownership_id LIKE :search_term";
+    }
+
     $stm = $_db->prepare($sql);
+    $stm->bindParam(':search_term', $searchTerm, PDO::PARAM_STR);
     $stm->execute();
 
     // Check if there are results
@@ -59,10 +94,10 @@ global $_db;
                     <td>' . htmlspecialchars($row["purchase_time"]) . '</td>
                   </tr>';
         }
-        echo '</tbody>';
+        echo '</tbody>';   
         echo '</table>';
     } else {
-        echo "<p>No book ownership records found.</p>";
+        echo "<p>No matching records found.</p>";
     }
 
     ?>

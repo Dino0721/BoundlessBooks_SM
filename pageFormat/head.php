@@ -64,7 +64,7 @@ require_once 'base.php';
             <nav class="admin-nav">
                 <ul class="admin-nav__ul">
                     <?= createNavItem("../orderManagement/orderListing.php", "Order Listing"); ?>
-                    <?= createNavItem("../rewardManagement/rewardManagementPage.php", "Reward Management"); ?>
+                    <?= createNavItem("../discountManagement/discountManagementPage.php", "Discount Management"); ?>
                 </ul>
             </nav>
         <?php endif; ?>

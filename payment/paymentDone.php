@@ -97,7 +97,7 @@ try {
     <script>
         // Redirect the user after 3 seconds
         setTimeout(() => {
-            window.location.href = '../productCatalog/productCatalog.php';
+            window.location.href = '../orderManagement/orderHistory.php';
         }, 3000);
     </script>
 </body>
