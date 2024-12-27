@@ -17,6 +17,25 @@ try {
     die('Error: ' . $e->getMessage());
 }
 
+$sortOrder = 'ASC'; // Default to ascending
+if (isset($_GET['sort']) && ($_GET['sort'] === 'asc' || $_GET['sort'] === 'desc')) {
+    $sortOrder = $_GET['sort']; // If 'asc' or 'desc' is set, use it
+}
+
+// Modify the query to use the sorting order
+try {
+    $stmt = $_db->prepare("SELECT * FROM book_item ORDER BY book_name " . $sortOrder);
+    $stmt->execute();
+    $books = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // Ensure $books is always an array, even if no books are found
+    if (!$books) {
+        $bookImage = 'default.jpg';
+    }
+} catch (PDOException $e) {
+    die('Error: ' . $e->getMessage());
+}
+
 try {
     $stmt = $_db->prepare("SHOW COLUMNS FROM book_item LIKE 'book_category'");
     $stmt->execute();
@@ -183,17 +202,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <!-- Book List Table -->
     <div class="table-section">
         <h2>Book List</h2>
+        <button id="sortAscButton">Sort A-Z (Ascending)</button>
+        <button id="sortDescButton">Sort Z-A (Descending)</button>
+
+        <br><br>
         <p class="book-count">Total Book: <span><?= count($books) ?></span></p>
         <table class="book-table">
             <thead>
                 <tr>
+                    <th>Book ID</th>
                     <th>Book Photo</th>
                     <th>Book Name</th>
                     <th>Description</th>
                     <th>Price</th>
                     <th>Status</th>
                     <th>Category</th>
-                    <th>Actions</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -204,6 +228,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <?php else: ?>
                     <?php foreach ($books as $book): ?>
                         <tr>
+                            <td><?= htmlspecialchars($book['book_id']) ?></td>
                             <td>
                                 <?php if ($book['book_photo']): ?>
                                     <img src="../images/<?= htmlspecialchars($book['book_photo']) ?>" alt="Book Image" class="book-image">
@@ -217,7 +242,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <td><?= htmlspecialchars($book['book_status']) ?></td>
                             <td><?= htmlspecialchars($book['book_category']) ?></td>
                             <td>
-                                <a href="editBook.php?book_id=<?= $book['book_id'] ?>" class="action-button">Edit</a> |
+                                <button class="edit-button" data-book-id="<?= $book['book_id'] ?>">Edit</button>
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -238,6 +263,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         });
     });
+    $(document).ready(function() {
+        // When the edit button is clicked
+        $('.edit-button').click(function() {
+            var bookId = $(this).data('book-id'); // Get the book_id from the data attribute
+            window.location.href = 'editBook.php?book_id=' + bookId; // Redirect to the edit page with the book_id in the query string
+        });
+    });
     // Automatically hide the message after 5 seconds
     setTimeout(function() {
         var message = document.querySelector('.alert-message');
@@ -245,6 +277,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             message.style.display = 'none';
         }
     }, 2500); // 5000 ms = 5 seconds
+    $(document).ready(function() {
+        // When the sort button is clicked
+        $('#sortAscButton').click(function() {
+            // Add the "sort=asc" query string to the URL and reload the page
+            window.location.href = window.location.pathname + '?sort=asc';
+        });
+    });
+    $(document).ready(function() {
+        // When the sort button is clicked for descending order
+        $('#sortDescButton').click(function() {
+            // Add the "sort=desc" query string to the URL and reload the page
+            window.location.href = window.location.pathname + '?sort=desc';
+        });
+    });
 </script>
 
 </html>

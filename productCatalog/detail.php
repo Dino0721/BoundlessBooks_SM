@@ -47,7 +47,10 @@ try {
             src="../images/<?= htmlspecialchars(!empty($book['book_photo']) ? $book['book_photo'] : 'default.jpg') ?>"
             alt="<?= htmlspecialchars($book['book_name']) ?>"
             class="book-detail-image">
-        <h1><?= htmlspecialchars($book['book_name']) ?></h1>
+        <h1>
+            <?= htmlspecialchars($book['book_name']) ?> |
+            <span class="category" style="color: grey;"><?= htmlspecialchars($book['book_category']) ?></span>
+        </h1>
         <p><?= htmlspecialchars($book['book_desc']) ?></p>
         <p class="price">Price: $<?= number_format($book['book_price'], 2) ?></p>
 
