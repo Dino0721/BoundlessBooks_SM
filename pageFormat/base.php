@@ -11,7 +11,7 @@ $loginPage = '../user/login.php'; // Adjust the path as needed
 $currentUrl = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
 // Check if the user is not logged in and not on the login page
-if (empty($_SESSION['user_id']) && ($currentUrl !== '/user/login.php' && $currentUrl !== '/user/signup.php' && $currentUrl !== '/user/verifyOtp.php')) {
+if (empty($_SESSION['user_id']) && ($currentUrl !== '/user/login.php' && $currentUrl !== '/user/signup.php' && $currentUrl !== '/user/forgotPassword.php'  && $currentUrl !== '/user/changePassword.php' && $currentUrl !== '/user/verifyOtp.php')) {
     // Redirect to the login page
         header("Location: $loginPage");
     exit();
