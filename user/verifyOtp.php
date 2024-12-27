@@ -14,7 +14,7 @@ if (is_post()) {
         exit();
     }
 
-    if (!$otp || $otp != ($_SESSION['otp'] ?? '')) {
+    if (!$enteredOtp || $enteredOtp != ($_SESSION['otp'] ?? '')) {
         echo 'Invalid OTP.';
     } elseif (time() > ($_SESSION['otp_expiry'] ?? 0)) {
         echo 'OTP expired. Please try signing up again.';
