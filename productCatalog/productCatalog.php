@@ -2,41 +2,57 @@
 $_title = 'Product Catalog';
 require_once '../pageFormat/base.php';
 include '../pageFormat/head.php';
+include 'searchForm.php';
 
 // $_title = 'Product Catalog';
+// Get search and filter inputs
 $search = isset($_GET['search']) ? trim($_GET['search']) : null;
+$category = isset($_GET['category']) ? trim($_GET['category']) : 'all';
 $showAll = isset($_GET['show_all']) ? $_GET['show_all'] : false;
 
+// Default SQL query
 $sql = "SELECT * FROM book_item WHERE book_status = 'AVAILABLE'";
 
+// Modify query for search and category filters
 if ($search) {
-    // Search all books regardless of status
-    $sql = "SELECT * FROM book_item WHERE book_name LIKE :search";
+    $sql .= " AND book_name LIKE :search";
 }
-
+if ($category && $category !== 'all') {
+    $sql .= " AND book_category = :category";
+}
 if ($showAll == 'yes') {
     $sql = "SELECT * FROM book_item"; // Show all books if "Show All" is clicked
 }
 
-
+// Fetch ENUM values for book_category
 try {
-    // Use the global PDO object `$_db` from the base script
     global $_db;
+
+    // Fetch ENUM values from book_category column
+    $categoryStmt = $_db->query("SHOW COLUMNS FROM book_item LIKE 'book_category'");
+    $categoryRow = $categoryStmt->fetch(PDO::FETCH_ASSOC);
+    preg_match_all("/'([^']+)'/", $categoryRow['Type'], $matches);
+    $categories = $matches[1]; // Array of category values
+
+    // Prepare the SQL query
     $stmt = $_db->prepare($sql);
-
+    $params = [];
     if ($search) {
-        $stmt->execute([':search' => '%' . $search . '%']);
-    } else {
-        $stmt->execute();
+        $params[':search'] = '%' . $search . '%';
     }
+    if ($category && $category !== 'all') {
+        $params[':category'] = $category;
+    }
+    $stmt->execute($params);
 
-    // Fetch all matching records
+    // Fetch matching records
     $books = $stmt->fetchAll();
-    $bookCount = count($books); // Count total number of records
-
+    $bookCount = count($books); // Count total books
 } catch (PDOException $e) {
-    // Handle database errors
     echo 'Error: ' . $e->getMessage();
+    $categories = [];
+    $books = [];
+    $bookCount = 0;
 }
 ?>
 
@@ -61,6 +77,14 @@ try {
                 placeholder="Search products..."
                 value="<?= htmlspecialchars($search) ?>"
                 class="search-input">
+            <select name="category" class="category-dropdown">
+                <option value="all" <?= !$category || $category === 'all' ? 'selected' : '' ?>>All Categories</option>
+                <?php foreach ($categories as $cat): ?>
+                    <option value="<?= htmlspecialchars($cat) ?>" <?= $category === $cat ? 'selected' : '' ?>>
+                        <?= htmlspecialchars($cat) ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
             <button type="submit" class="search-button">Search</button>
         </form>
         <!-- Filter buttons -->
@@ -94,11 +118,11 @@ try {
                         $defaultImage = "../images/default.jpg"; // Path to the default image
                         $imageSrc = $book->book_photo ? "../images/" . htmlspecialchars(trim($book->book_photo)) : $defaultImage;
                         ?>
-
-                        <img src="<?= $imageSrc ?>" alt="<?= htmlspecialchars($book->book_name) ?>" class="book-image">
-
-
-                        <h2><?= htmlspecialchars($book->book_name) ?></h2>
+                        <img src="<?= $imageSrc ?>" alt="<?= htmlspecialchars($book->book_name) ?>" class="book-detail-image">
+                        <h2>
+                            <?= htmlspecialchars($book->book_name) ?> |
+                            <span class="category" style="color: grey;"><?= htmlspecialchars($book->book_category) ?></span>
+                        </h2>
                         <p><?= htmlspecialchars($book->book_desc) ?></p>
                         <p class="price">Price: $<?= number_format($book->book_price, 2) ?></p>
                         <p class="status <?= strtolower(htmlspecialchars($book->book_status)) ?>">

@@ -289,8 +289,8 @@ button:hover {
 }
 
 .book-detail-image {
-    width: 300px;
-    height: 400px;
+    width: 100px;
+    max-height: 300px;
     height: auto;
     object-fit: cover;
     border: 1px solid #ccc;
@@ -308,8 +308,15 @@ button:hover {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     text-align: center;
     cursor: pointer;
-    /* Make it clear the div is clickable */
-    max-width: 300px;
+
+    /* Ensure consistent size */
+    width: 300px;
+    height: 45x; /* Use fixed height for consistent layout */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center; /* Center content horizontally */
+    overflow: hidden; /* Prevent content overflow */
 }
 
 .book-image {

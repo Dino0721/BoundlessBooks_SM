@@ -15,6 +15,19 @@ try {
     die('Error fetching categories: ' . $e->getMessage());
 }
 
+// Sort categories in ascending order
+sort($categories);
+
+// Query to count books for each category
+$categoryCounts = [];
+foreach ($categories as $category) {
+    $stmt = $_db->prepare("SELECT COUNT(*) FROM book_item WHERE book_category = :category");
+    $stmt->bindParam(':category', $category);
+    $stmt->execute();
+    $count = $stmt->fetchColumn();
+    $categoryCounts[$category] = $count;
+}
+
 // Handle adding a new category
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['new_category'])) {
     $newCategory = trim($_POST['new_category']); // Normalize input
@@ -101,18 +114,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['new_category'])) {
                     <tr>
                         <th>No.</th>
                         <th>Category Name</th>
+                        <th>Books in Category</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php if (empty($categories)): ?>
                         <tr>
-                            <td colspan="2">No categories found</td>
+                            <td colspan="3">No categories found</td>
                         </tr>
                     <?php else: ?>
                         <?php foreach ($categories as $index => $category): ?>
                             <tr>
                                 <td><?= $index + 1 ?></td>
                                 <td><?= htmlspecialchars($category) ?></td>
+                                <td><?= $categoryCounts[$category] ?></td> <!-- Display book count -->
                             </tr>
                         <?php endforeach; ?>
                     <?php endif; ?>
@@ -122,22 +137,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['new_category'])) {
     </div>
 
     <script>
-        // $(document).ready(function() {
-        //     // Attach the confirmation before form submission
-        //     $('.add-book-form').on('submit', function(e) {
-        //         var confirmation = confirm("Are you sure you want to add this book?");
-        //         if (!confirmation) {
-        //             e.preventDefault(); // Prevent form submission if user clicks "Cancel"
-        //         }
-        //     });
-        // });
         setTimeout(function() {
             var message = document.querySelector('.alert-message');
             if (message) {
                 message.style.display = 'none';
                 location.reload();
             }
-        }, 2500); // 5000 ms = 5 seconds
+        }, 2500); // 2500 ms = 2.5 seconds
     </script>
 </body>
 

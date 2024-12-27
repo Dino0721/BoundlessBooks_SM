@@ -28,22 +28,35 @@ $book_status = $book->book_status;
 $book_category = $book->book_category;
 $book_photo = $book->book_photo;  // Default to current photo unless a new one is uploaded
 
+// Fetch the distinct book categories dynamically from the database
+try {
+    $stmt = $_db->query("SHOW COLUMNS FROM book_item WHERE Field = 'book_category'");
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    preg_match("/^enum\((.*)\)$/", $result['Type'], $matches);
+    $bookCategories = array_map(function ($value) {
+        return trim($value, "'");
+    }, explode(',', $matches[1]));
+} catch (PDOException $e) {
+    echo "Error fetching book categories: " . $e->getMessage();
+    exit;
+}
+
 // Fetch the possible book statuses dynamically (ENUM values from the database)
 try {
     $stmt = $_db->query("SHOW COLUMNS FROM book_item WHERE Field = 'book_status'");
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
     preg_match("/^enum\((.*)\)$/", $result['Type'], $matches);
+
+    // Extract the values and format them
     $bookStatuses = array_map(function ($value) {
         return trim($value, "'");
     }, explode(',', $matches[1]));
 } catch (PDOException $e) {
-    echo "Error fetching ENUM values: " . $e->getMessage();
+    echo "Error fetching book statuses: " . $e->getMessage();
     exit;
 }
 
-// You might want to fetch the categories from the database if they are stored in another table
-$bookCategories = ['Fiction', 'Non-Fiction', 'Sci-Fi', 'Biography']; // Example categories, you can update as needed
-
+// Handle form submission for updating book details
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Get updated book details from the form
     $book_name = !empty($_POST['book_name']) ? $_POST['book_name'] : $book->book_name;
@@ -170,16 +183,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </select>
 
             <!-- Add Category Selection -->
-            <label for="book_category">Category:</label>
+            <label for="book_category">Book Category:</label>
             <select id="book_category" name="book_category" required>
                 <?php foreach ($bookCategories as $category): ?>
-                    <option value="<?= htmlspecialchars($category) ?>" <?= $book->book_category === $category ? 'selected' : '' ?>>
-                        <?= htmlspecialchars($category) ?>
+                    <option value="<?= htmlspecialchars($category); ?>" <?= $category === $book_category ? 'selected' : ''; ?>>
+                        <?= htmlspecialchars($category); ?>
                     </option>
                 <?php endforeach; ?>
             </select>
-
-
 
             <button type="submit">Update Book</button>
         </form>
