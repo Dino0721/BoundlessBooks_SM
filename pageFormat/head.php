@@ -53,7 +53,7 @@ require_once 'base.php';
                     <?= createNavItem("../user/login.php", "Login"); ?>
                 <?php endif; ?>
 
-                <?= createNavItem("../cartSide/CartPage.php", "Shopping Cart"); ?>
+                <?= createNavItem("../cartSide/cartMain.php", "Shopping Cart"); ?>
 
                 <?= createNavItem("../orderManagement/orderHistory.php", "Order History"); ?>
             </ul>
