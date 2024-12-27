@@ -5,47 +5,40 @@ require '../pageFormat/head.php';
 
 if (is_post()) {
     $enteredOtp = req('otp');
+    $email = $_SESSION['signup_email'] ?? null;
+    $password = $_SESSION['signup_password'] ?? null;
 
-    if ($_SESSION['otp'] == $enteredOtp && time() <= $_SESSION['otp_expiry']) {
-        $password = req('password');
-        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-        $email = $_SESSION['email'];
+    if (!$email || !$password) {
+        echo 'Session expired. Please start the signup process again.';
+        redirect('signup.php');
+        exit();
+    }
 
+    if (!$otp || $otp != ($_SESSION['otp'] ?? '')) {
+        echo 'Invalid OTP.';
+    } elseif (time() > ($_SESSION['otp_expiry'] ?? 0)) {
+        echo 'OTP expired. Please try signing up again.';
+        unset($_SESSION['otp'], $_SESSION['otp_expiry'], $_SESSION['signup_email'], $_SESSION['signup_password']);
+        redirect('signup.php');
+        exit();
+    } else {
+        // OTP is valid, insert user into database
         $stm = $_db->prepare('INSERT INTO user (email, password, phone_number) VALUES (?, ?, ?)');
-
-        if ($stm->execute([$email, $hashed_password, ''])) {
-            $new_user_id = $_db->lastInsertId();
-
-            unset($_SESSION['otp']);
-            unset($_SESSION['otp_expiry']);
-
+        if ($stm->execute([$email, $password, ''])) {
+            unset($_SESSION['otp'], $_SESSION['otp_expiry'], $_SESSION['signup_email'], $_SESSION['signup_password']);
             temp('info', 'Sign-up successful.');
-
-            $_SESSION['user_id'] = $new_user_id;
-            $_SESSION['email'] = $email;
-            $_SESSION['user'] = [
-                'user_id' => $new_user_id,
-                'email' => $email,
-            ];
-
-            login(['email' => $email, 'role' => $role], '../productCatalog/productCatalog.php');
+            redirect('login.php');
             exit();
         } else {
-            $_err['general'] = 'Failed to sign up. Please try again.';
+            echo 'Failed to complete sign-up. Please try again.';
         }
-    } else {
-        $_err['otp'] = 'Invalid or expired OTP. Please try again.';
     }
 }
 ?>
 
-<!-- OTP Verification Form -->
 <form action="verifyOtp.php" method="post">
     <h1>Verify OTP</h1>
-    <label for="otp">OTP</label><br>
-    <input type="text" name="otp" id="otp" maxlength="6" required><br>
-    <?= err('otp') ?><br>
-
-    <button type="submit">Verify OTP</button>
-    <?= isset($_err['general']) ? '<p>' . $_err['general'] . '</p>' : '' ?>
+    <label for="otp">Enter OTP:</label>
+    <input type="text" id="otp" name="otp" maxlength="6" required>
+    <button type="submit">Verify</button>
 </form>

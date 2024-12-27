@@ -1,6 +1,5 @@
 <?php
 require_once __DIR__ . '/../vendor/autoload.php';
-
 require '../pageFormat/base.php';
 require '../pageFormat/head.php';
 
@@ -12,12 +11,11 @@ if (is_post()) {
     $_err = [];
 
     if ($form_type == 'signup') {
-        params:
+
         // Handle Sign-Up Form Submission
         $email = req('email');
         $password = req('password');
         $confirm_password = req('confirm_password') ?? '';
-
         // Email Validation
         if ($email == '') {
             $_err['email'] = 'Email is required.';
@@ -47,51 +45,42 @@ if (is_post()) {
         }
 
         if (empty($_err)) {
-            $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+            // OTP generation
+            $otp = rand(100000, 999999);
+            $_SESSION['signup_email'] = $email;
+            $_SESSION['signup_password'] = password_hash($password, PASSWORD_DEFAULT);
+            $_SESSION['otp'] = $otp;
+            $_SESSION['otp_expiry'] = time() + 180;
 
-            // Insert user into the database
-            $stm = $_db->prepare('INSERT INTO user (email, password, phone_number) VALUES (?, ?, ?)');
-            if ($stm->execute([$email, $hashed_password, ''])) {
-                temp('info', 'Sign-up successful.');
+            $mail = new PHPMailer(true);
+            try {
+                // Server settings
+                $mail->isSMTP();
+                $mail->Host = 'smtp.gmail.com';
+                $mail->SMTPAuth = true;
+                $mail->Username = 'tequilaguey777@gmail.com'; // Use your email
+                $mail->Password = 'dbkhijmymjdaohkj'; // Use your email password
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+                $mail->Port = 587;
 
-                // OTP generation
-                $otp = rand(100000, 999999);
-                $_SESSION['otp'] = $otp;
-                $_SESSION['otp_expiry'] = time() + 600;
+                // Recipients
+                $mail->setFrom('tequilaguey777@gmail.com', 'BoundlessBooks');
+                $mail->addAddress($email);
 
-                $mail = new PHPMailer(true);
-                try {
-                    // Server settings
-                    $mail->isSMTP();
-                    $mail->Host = 'smtp.gmail.com';
-                    $mail->SMTPAuth = true;
-                    $mail->Username = 'tequilaguey777@gmail.com'; // Use your email
-                    $mail->Password = 'dbkhijmymjdaohkj'; // Use your email password
-                    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-                    $mail->Port = 587;
+                // Content
+                $mail->isHTML(true);
+                $mail->Subject = 'Your OTP for Sign Up';
+                $mail->Body = "Your OTP code is: $otp. It will expire in 3 minutes.";
 
-                    // Recipients
-                    $mail->setFrom('tequilaguey777@gmail.com', 'BoundlessBooks');
-                    $mail->addAddress($email);
-
-                    // Content
-                    $mail->isHTML(true);
-                    $mail->Subject = 'Your OTP for Sign Up';
-                    $mail->Body = "Your OTP code is: $otp. It will expire in 3 minutes.";
-
-                    $mail->send();
-                    echo 'OTP has been sent to your email.';
-                } catch (Exception $e) {
-                    echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
-                }
-
-                $_SESSION['email'] = $email;
-
-                redirect(url: 'verifyOtp.php');
-                exit();
-            } else {
-                $_err['general'] = 'Failed to sign up. Please try again.';
+                $mail->send();
+                echo 'OTP has been sent to your email.';
+            } catch (Exception $e) {
+                echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
             }
+
+            // Redirect to OTP verification page
+            redirect('verifyOtp.php');
+            // exit();
         }
     }
 }
