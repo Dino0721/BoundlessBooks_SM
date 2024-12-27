@@ -1,3 +1,7 @@
+body {
+    /* padding-bottom: 50px !important; Ensure space for fixed summary */
+}
+
 .number-input {
     display: flex;
     align-items: center;
@@ -12,7 +16,6 @@
     width: 50px;
     text-align: center;
     -moz-appearance: textfield;
-    /* Firefox */
 }
 
 /* Chrome, Safari, Edge, and Opera */
@@ -49,3 +52,53 @@
     height: 100%;
     object-fit: contain;
 }
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 30px; /* Adds space below the table */
+}
+
+th, td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+
+/* Description format */
+.tooltip {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    max-width: 200px; /* Adjust based on your layout */
+}
+
+.tooltip:hover::after {
+    content: attr(title);
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: normal;
+    z-index: 10;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    width: max-content;
+    max-width: 300px; /* Adjust as needed */
+}
+
+.select-book{
+    cursor: pointer;
+}
+
