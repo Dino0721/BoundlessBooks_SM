@@ -115,6 +115,14 @@ try {
             text-decoration: none;
             color: white;
         }
+
+        form button{
+            padding:8px;
+            background-color: gray;
+            color:white;
+            margin:5px;
+        }
+        
     </style>
 </head>
 
