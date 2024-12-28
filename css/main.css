@@ -56,7 +56,6 @@ header a {
     align-items: center;
     padding-block: 1.8rem;
     padding-inline: 3rem;
-    margin: 2rem;
     border-radius: 0.5rem;
     background-color: hsl(220.91deg 39.29% 10.98% / 50%);
 }
@@ -103,7 +102,7 @@ header a {
     padding-inline: 3rem;
     border-radius: 0.5rem;
     background-color: hsl(220.91deg 39.29% 10.98% / 50%);
-    max-width: 87.5vw;
+    width: 100vw;
 }
 
 .header__main-nav {
