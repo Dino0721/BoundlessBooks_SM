@@ -1,9 +1,6 @@
 <?php
-// require_once __DIR__ . '/../vendor/autoload.php';
 require '../pageFormat/base.php';
 require '../pageFormat/head.php';
-
-use PHPMailer\PHPMailer\Exception;
 
 if (is_post()) {
     $form_type = req('form_type'); // Get the form type to differentiate actions
@@ -14,6 +11,7 @@ if (is_post()) {
         $email = req('email');
         $password = req('password');
         $confirm_password = req('confirm_password') ?? '';
+        $phone_number = req('phone_number') ?? '';
 
         // Email Validation
         if ($email == '') {
@@ -43,11 +41,17 @@ if (is_post()) {
             $_err['confirm_password'] = 'Passwords do not match.';
         }
 
+        // Phone Number Validation (Optional Field)
+        if ($phone_number !== '' && !preg_match('/^\+?[0-9]{10,15}$/', $phone_number)) {
+            $_err['phone_number'] = 'Invalid phone number format. Use digits only, optionally prefixed by "+".';
+        }
+
         if (empty($_err)) {
             // OTP generation
             $otp = rand(100000, 999999);
             $_SESSION['signup_email'] = $email;
             $_SESSION['signup_password'] = password_hash($password, PASSWORD_DEFAULT);
+            $_SESSION['signup_phone'] = $phone_number;
             $_SESSION['otp'] = $otp;
             $_SESSION['otp_expiry'] = time() + 180;
 
@@ -98,6 +102,10 @@ if (isset($_POST['back_to_login'])) {
     <label for="confirm_password">Confirm Password</label><br>
     <?= html_password('confirm_password', 'maxlength="100"') ?>
     <?= err('confirm_password') ?><br>
+
+    <label for="phone_number">Phone Number (Optional)</label><br>
+    <?= html_text('phone_number', 'maxlength="15"') ?>
+    <?= err('phone_number') ?><br>
 
     <button type="submit" name="back_to_login">Back to Login</button>
     <button type="reset">Reset</button>
