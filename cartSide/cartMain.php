@@ -118,7 +118,7 @@ try {
                     Selected: <span id='selected-count'>0</span> out of <span id='total-count'>" . count($cartItems). "</span>
                     books | Total Price: $<span id='total-price'>0.00</span>
                 </p>
-                <button id='checkout-button'>Checkout</button>
+                <button id='checkout-button' onclick=\"window.location.href='../payment/paymentpage.php';\">Checkout</button>
             </div>";
     }
 } catch (Exception $e) {

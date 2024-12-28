@@ -55,8 +55,10 @@ if ($cartId) {
         echo '</tbody>';
         echo '<tfoot>
                 <tr>
+                    <div class="total-container">
                     <td colspan="1"><strong>Total</strong></td>
-                    <td><strong>RM ' . number_format($total, 2) . '</strong></td>
+                    <td id="totalPrice"><strong>RM ' . number_format($total, 2) . '</strong></td>
+                    </div>
                 </tr>
               </tfoot>';
         echo '</table>';
