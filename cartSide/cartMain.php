@@ -22,8 +22,7 @@ $ownedBooksStmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
 $ownedBooksStmt->execute();
 $ownedBooks = $ownedBooksStmt->fetchAll(PDO::FETCH_COLUMN, 0);  // Get book_ids of owned books
 
-// Assume user_id = 1 for testing
-$user_id = 1;
+$user_id = $_SESSION['user_id'];
 
 try {
     // Fetch the active cart ID for the user

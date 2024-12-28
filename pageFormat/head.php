@@ -75,7 +75,6 @@ if (isset($_SESSION['user_id'])) {
         <nav class="header__nav">
             <ul class="header__ul">
                 <?= createNavItem("../productCatalog/productCatalog.php", "Product Catalog"); ?>
-                <?= createNavItem("../productCatalog/manageBooks.php", "Manage Books"); ?>
 
                 <?php if (isset($_SESSION['user_id'])): ?>
                     <a href="../user/profile.php" class="profile">
@@ -96,6 +95,7 @@ if (isset($_SESSION['user_id'])) {
         <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] == 1): ?>
             <nav class="admin-nav">
                 <ul class="admin-nav__ul">
+                    <?= createNavItem("../productCatalog/manageBooks.php", "Manage Books"); ?>
                     <?= createNavItem("../orderManagement/orderListing.php", "Order Listing"); ?>
                     <?= createNavItem("../discountManagement/discountManagementPage.php", "Discount Management"); ?>
                 </ul>

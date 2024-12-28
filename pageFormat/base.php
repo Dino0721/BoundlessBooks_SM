@@ -4,7 +4,7 @@
 date_default_timezone_set('Asia/Kuala_Lumpur');
 session_start();
 
-$_SESSION['user_id']=1;
+$_SESSION['user_id']=2;
 $_SESSION['admin'] = 1;
 
 // Define the login page URL
