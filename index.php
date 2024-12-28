@@ -49,7 +49,7 @@ try {
     }
 
     // Display a link to the home page
-    echo '<p><a href="productCatalog/productCatalog.php">Go to Home Page</a></p>';
+    echo '<p><a href="../user/login.php">Go to Login</a></p>';
 } catch (Exception $e) {
     echo "<p>Error: " . $e->getMessage() . "</p>";
 } finally {

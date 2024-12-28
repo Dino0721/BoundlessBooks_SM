@@ -83,13 +83,9 @@ CREATE TABLE IF NOT EXISTS wishlist (
     book_id INT NOT NULL
 );
 
--- Insert Data: user
-INSERT INTO user (user_id, email, password, phone_number, reset_token, token_expiry) VALUES
-(1, 'user1@example.com', 'hashed_password_1', '1234567890', '', NULL),
-(2, 'user2@example.com', 'hashed_password_2', '2345678901', '', NULL),
-(3, 'user3@example.com', 'hashed_password_3', '3456789012', '', NULL),
-(4, 'user4@example.com', 'hashed_password_4', '4567890123', '', NULL),
-(5, 'user5@example.com', 'hashed_password_5', '5678901234', '', NULL);
+INSERT INTO `user` (`user_id`, `email`, `password`, `phone_number`, `reset_token`, `token_expiry`, `admin`) VALUES
+(1, 'boundlessbook@gmail.com', '$2y$10$lyjLM4Qru1z9W8qco6BBguF75HbzfI2/ZgMqQMYHecdzojhkdwnDq', '', NULL, NULL, 1),
+(2, 'userKevin@gmail.com', '$2y$10$wK096v/VE6nwYNURRYtum.AXMZ5mQKPD1rQ84FAuYCvUJc8r64tWW', '', NULL, NULL, 0);
 
 -- Insert Data: book_ownership
 INSERT INTO book_ownership (user_id, book_id, purchase_date, purchase_time) VALUES
