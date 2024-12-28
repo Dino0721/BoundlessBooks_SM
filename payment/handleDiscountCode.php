@@ -14,6 +14,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($stmt->rowCount() > 0) {
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            $_SESSION['discount_code_used'] = $discount_code;
+            $_SESSION['discount_percentage'] = $result['discount_percentage'];
             echo json_encode([
                 'valid' => true,
                 'discount_percentage' => $result['discount_percentage']

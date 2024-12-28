@@ -2,8 +2,10 @@
 include '../pageFormat/base.php';
 include '../pageFormat/head.php';
 
-// Assuming the global database connection variable is set
 global $_db;
+
+unset($_SESSION['discount_code_used']);
+unset($_SESSION['discount_percentage']);
 ?>
 
 <!DOCTYPE html>

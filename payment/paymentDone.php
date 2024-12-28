@@ -1,9 +1,18 @@
 <?php
 include '../pageFormat/base.php';
-
 global $_db;
 
+include_once 'generateBillPdf.php';
+
 $user_id = $_SESSION['user_id'];
+
+if (isset($_POST['generate_bill'])) {
+    // Call the generateBillingPdf function to generate the PDF
+    if (isset($_SESSION['purchase_time']) && isset($_SESSION['purchase_date'])) {
+        generateBillingPdf($_db, $_SESSION['purchase_time'], $_SESSION['purchase_date']);
+        exit();
+    }
+}
 
 try {
     // Begin transaction
@@ -13,6 +22,15 @@ try {
     $selectBooksStmt = $_db->prepare($selectBooksSql);
     $selectBooksStmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
     $selectBooksStmt->execute();
+    $unpaidBookRows = $selectBooksStmt->fetchAll(PDO::FETCH_ASSOC);
+
+    if ($unpaidBookRows > 0) {
+        $_SESSION['purchase_time'] = date('H:i:s');
+        $_SESSION['purchase_date'] = date('Y-m-d');
+    }
+
+    $purchaseTime = $_SESSION['purchase_time'];
+    $purchaseDate = $_SESSION['purchase_date'];
 
     // Update the current active cart's paid column to 1
     $updateCartSql = "UPDATE cart SET paid = 1 WHERE user_id = :user_id AND paid = 0";
@@ -20,19 +38,16 @@ try {
     $updateCartStmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
     $updateCartStmt->execute();
 
-    $currentDate = date('Y-m-d'); // Format: YYYY-MM-DD
-    $currentTime = date('H:i:s'); // Format: HH:MM:SS
-
     // Insert the book IDs into the book_ownership table
     $insertOwnershipSql = "INSERT INTO book_ownership (user_id, book_id, purchase_date, purchase_time) VALUES (:user_id, :book_id, :purchase_date, :purchase_time)";
     $insertOwnershipStmt = $_db->prepare($insertOwnershipSql);
 
     // Loop through the results and insert into book_ownership table
-    while ($row = $selectBooksStmt->fetch(PDO::FETCH_ASSOC)) {
+    foreach ($unpaidBookRows as $row) {
         $insertOwnershipStmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
         $insertOwnershipStmt->bindParam(':book_id', $row['book_id'], PDO::PARAM_INT);
-        $insertOwnershipStmt->bindParam(':purchase_date', $currentDate, PDO::PARAM_STR);
-        $insertOwnershipStmt->bindParam(':purchase_time', $currentTime, PDO::PARAM_STR);
+        $insertOwnershipStmt->bindParam(':purchase_date', $purchaseDate, PDO::PARAM_STR);
+        $insertOwnershipStmt->bindParam(':purchase_time', $purchaseTime, PDO::PARAM_STR);
         $insertOwnershipStmt->execute();
     }
 
@@ -92,6 +107,14 @@ try {
             color: #28a745;
             text-align: center;
         }
+
+        body a {
+            padding: 8px;
+            background-color: gray;
+            margin: 5px;
+            text-decoration: none;
+            color: white;
+        }
     </style>
 </head>
 
@@ -99,12 +122,13 @@ try {
     <img src="paymentAssets/greenTick.png" alt="Green Tick" class="green-tick">
     <div class="message">Payment Done</div>
 
-    <script>
-        // Redirect the user after 3 seconds
-        setTimeout(() => {
-            window.location.href = '../orderManagement/orderHistory.php';
-        }, 3000);
-    </script>
+    <!-- Form to trigger PDF generation -->
+    <form method="POST">
+        <button type="submit" name="generate_bill">Download Bill as PDF</button>
+    </form>
+
+    <br>
+    <a href="../orderManagement/orderHistory.php">Proceed to download book pdf</a>
 </body>
 
 </html>
