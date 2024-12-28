@@ -86,7 +86,7 @@ if (isset($_SESSION['user_id'])) {
                 <?php endif; ?>
 
                 <?= createNavItem("../cartSide/cartMain.php", "Shopping Cart" . ($itemCount ? " ($itemCount)" : "")); ?>
-
+                <?= createNavItem("../cartSide/wishList.php", "Wishlist"); ?>
                 <?= createNavItem("../orderManagement/orderHistory.php", "Order History"); ?>
             </ul>
         </nav>
