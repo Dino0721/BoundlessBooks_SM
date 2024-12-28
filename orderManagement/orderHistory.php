@@ -32,7 +32,7 @@ global $_db;
     $searchQuery = isset($_GET['search']) ? '%' . $_GET['search'] . '%' : '%'; // Default to showing all books if no search query
 
     // Query to join book_ownership with book_item and fetch necessary details, including a search filter
-    $sql = "SELECT b.book_name, b.book_price, bo.purchase_date, bo.purchase_time 
+    $sql = "SELECT b.book_id, b.book_name, b.book_price, bo.purchase_date, bo.purchase_time 
             FROM book_ownership bo 
             JOIN book_item b ON b.book_id = bo.book_id 
             WHERE bo.user_id = :user_id AND b.book_name LIKE :search_query";
@@ -55,8 +55,12 @@ global $_db;
         echo '<tbody>';
         // Loop through and display each book item
         while ($row = $stm->fetch(PDO::FETCH_ASSOC)) {
+            $bookId = $row["book_id"];
             echo '<tr>
-                    <td>' . htmlspecialchars($row["book_name"]) . '</td>
+                    <td>
+                        ' . htmlspecialchars($row["book_name"]) . '
+                        <a href="downloadBook.php?book_id=' . $bookId . '" class="download-button">Download PDF</a>
+                    </td>
                     <td>RM' . number_format($row["book_price"], 2) . '</td>
                     <td>' . htmlspecialchars($row["purchase_date"]) . '</td>
                     <td>' . htmlspecialchars($row["purchase_time"]) . '</td>
