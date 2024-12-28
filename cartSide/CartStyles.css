@@ -115,3 +115,107 @@ th {
     pointer-events: none;  /* Disable interaction with checkbox */
     opacity: 0.5;  /* Make checkbox appear disabled */
 }
+
+/* sorting button */
+h5 {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    padding: 5px 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+.sort-btn {
+    background: white;
+    color: #007bff;
+    cursor: pointer;
+    /* font-weight: bold; */
+    padding: 8px;
+    margin: 5px;
+    border-radius: 5px;
+    transition: border-color 0.3s, background-color 0.3s;
+}
+
+.sort-btn:hover {
+    border-color: #0056b3;
+    background-color: none;
+    color: white;
+}
+
+/* .category-sort{
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    padding: 10px 10px;
+    margin: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    border-radius: 5px;
+} */
+
+/* Style for the select container */
+select {
+    width: 200px;
+    padding: 7px 15px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    color: #333;
+    cursor: pointer;
+    transition: border-color 0.3s, background-color 0.3s;
+}
+
+/* Hover effect for the select box */
+select:hover {
+    border-color: #007bff;
+    background-color: #eaf4ff;
+}
+
+/* Focus effect for the select box */
+select:focus {
+    outline: none;
+    border-color: #007bff;
+    background-color: #eaf4ff;
+}
+
+/* Style the option elements */
+option {
+    padding: 8px;
+    font-size: 16px;
+    cursor:pointer;
+}
+
+/* Style for the default option */
+option:first-child {
+    color: #aaa;
+}
+
+Style the dropdown arrow
+select::-ms-expand {
+    display: none; /* Removes the default dropdown arrow in IE */
+}
+
+/* Custom select box arrow */
+select {
+    appearance: none; /* Removes the default arrow in most browsers */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 10 10"><polygon points="0,0 10,0 5,5" fill="#333"/></svg>');
+    background-position: right 10px center;
+    background-repeat: no-repeat;
+    background-size: 10px;
+}
+
+/* Adding some space between the select and other elements */
+select + label {
+    margin-top: 15px;
+}
+
+/* Optional: If you want to center the select on the page */
+.center-select {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    flex-direction: column;
+}
