@@ -143,6 +143,11 @@ INSERT INTO book_item (book_id, book_name, book_desc, book_price, book_category,
 (2, 'Normal People', 'Normal People (Sally Rooney)', 14.99, 'Romance', 'AVAILABLE', 'normalpeople.jpg', 'books/Normal People (Sally Rooney).pdf'),
 (3, 'Orbital', 'Orbital (Samantha Harvey)', 16.99, 'Fiction', 'AVAILABLE', 'orbital.jpg', 'books/Orbital (Samantha Harvey).pdf'),
 (4, 'The Body Keeps the Score', 'The Body Keeps the Score Brain, Mind, and Body in the Healing of Trauma (Bessel van der Kolk MD)', 24.99, 'Self-Help', 'AVAILABLE', 'thebodykeepsthescore.jpg', 'books/The Body Keeps the Score Brain, Mind, and Body in the Healing of Trauma (Bessel van der Kolk MD).pdf'),
-(5, 'The Overthinking Cure', 'The Overthinking Cure How to Stay in the Present, Shake Negativity, and Stop Your Stress and Anxiety (Nick Trenton)', 18.99, 'Self-Help', 'AVAILABLE', 'theoverthinkingcure.jpg', 'books/The Overthinking Cure How to Stay in the Present, Shake Negativity, and Stop Your Stress and Anxiety (Nick Trenton).pdf');
+(5, 'The Overthinking Cure', 'The Overthinking Cure How to Stay in the Present, Shake Negativity, and Stop Your Stress and Anxiety (Nick Trenton)', 18.99, 'Self-Help', 'AVAILABLE', 'theoverthinkingcure.jpg', 'books/The Overthinking Cure How to Stay in the Present, Shake Negativity, and Stop Your Stress and Anxiety (Nick Trenton).pdf'),
+(6, 'Animal Farm', 'Animal Farm (George Orwell)', 12.99, 'Fiction', 'DISABLED', 'animalfarm.png', 'books/Animal Farm (George Orwell).pdf'),
+(7, 'Conversations With Friends', 'Conversations With Friends (Sally Rooney)', 15.99, 'Biography', 'AVAILABLE', 'conversationswithfriends.jpg', 'books/Conversations With Friends (Sally Rooney).pdf'),
+(8, 'Everything I Know About Love', 'Everything I Know About Love (Dolly Alderton)', 17.99, 'Biography', 'AVAILABLE', 'everythingiknowaboutlove.jpg', 'books/Everything I Know About Love (Dolly Alderton).pdf'),
+(9, 'The Midnight Library', 'The Midnight Library (Matt Haig)', 20.99, 'Science', 'AVAILABLE', 'themidnightlibrary.jpg', 'books/The Midnight Library (Matt Haig).pdf'),
+(10, 'The Secret History', 'The Secret History (Donna Tartt)', 22.99, 'Thriller', 'DISABLED', 'thesecrethistory.jpg', 'books/The Secret History (Donna Tartt).pdf');
 
 COMMIT;
