@@ -69,11 +69,18 @@ CREATE TABLE IF NOT EXISTS payment (
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Table: discount_code
-CREATE TABLE discount_code (
+CREATE TABLE IF NOT EXISTS discount_code (
     code_id INT AUTO_INCREMENT PRIMARY KEY,
     code VARCHAR(50) NOT NULL,
     discount_percentage DECIMAL(5, 2) NOT NULL,
     status ENUM('active', 'inactive') NOT NULL DEFAULT 'active'
+);
+
+-- Table: wishlist
+CREATE TABLE IF NOT EXISTS wishlist (
+    wishlist_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    book_id INT NOT NULL
 );
 
 -- Insert Data: user
@@ -149,5 +156,16 @@ INSERT INTO book_item (book_id, book_name, book_desc, book_price, book_category,
 (8, 'Everything I Know About Love', 'Everything I Know About Love (Dolly Alderton)', 17.99, 'Biography', 'AVAILABLE', 'everythingiknowaboutlove.jpg', 'books/Everything I Know About Love (Dolly Alderton).pdf'),
 (9, 'The Midnight Library', 'The Midnight Library (Matt Haig)', 20.99, 'Science', 'AVAILABLE', 'themidnightlibrary.jpg', 'books/The Midnight Library (Matt Haig).pdf'),
 (10, 'The Secret History', 'The Secret History (Donna Tartt)', 22.99, 'Thriller', 'DISABLED', 'thesecrethistory.jpg', 'books/The Secret History (Donna Tartt).pdf');
+
+-- Insert Data: wishlist
+INSERT INTO wishlist (user_id, book_id) VALUES
+(1, 8),
+(1, 9),
+(2, 6),
+(2, 3),
+(3, 9),
+(3, 8),
+(4, 6),
+(4, 5);
 
 COMMIT;
