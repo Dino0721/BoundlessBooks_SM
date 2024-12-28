@@ -1,5 +1,7 @@
 <?php
-include '../pageFormat/head.php';
+require_once '../pageFormat/base.php';
+?>
+<?php
 try {
     $_db = new PDO("mysql:host=localhost;dbname=ebookDB", "root", "");
     $_db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
