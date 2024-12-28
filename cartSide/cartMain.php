@@ -15,6 +15,8 @@ include '../cartSide/deleteCartBook.php';
 
 global $_db;
 
+$user_id = $_SESSION['user_id'];
+
 // Fetch the books the user already owns
 $ownedBooksQuery = "SELECT book_id FROM book_ownership WHERE user_id = :user_id";
 $ownedBooksStmt = $_db->prepare($ownedBooksQuery);
@@ -239,13 +241,25 @@ try {
             // Toggle the sort order for price
             if (sortKey === 'book_name') {
                 if (sortOrder === 'asc') {
-                    // Change to descending (High to Low)
+                    // Change to descending (A to Z)
                     this.dataset.order = 'desc';
                     this.textContent = 'Name (A to Z)';
                 } else {
-                    // Change to ascending (Low to High)
+                    // Change to ascending (Z to A)
                     this.dataset.order = 'asc';
                     this.textContent = 'Name (Z to A)';
+                }
+            }
+
+            if (sortKey === 'book_category') {
+                if (sortOrder === 'asc') {
+                    // Change to descending (A to Z)
+                    this.dataset.order = 'desc';
+                    this.textContent = 'Category (A to Z)';
+                } else {
+                    // Change to ascending (Z to A)
+                    this.dataset.order = 'asc';
+                    this.textContent = 'Category (Z to A)';
                 }
             }
         });
