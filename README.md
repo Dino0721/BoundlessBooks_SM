@@ -23,9 +23,11 @@ Web-based project
 
 # Example Accounts
 ## Customer
-1. userKevin@gmail.com: kevin142
+1. email : userKevin@gmail.com
+   password : kevin142
 
 ## Staff
-1. boundlessbook@gmail.com (admin): abc123
+1. email : boundlessbook@gmail.com 
+   password : abc123
 
 
