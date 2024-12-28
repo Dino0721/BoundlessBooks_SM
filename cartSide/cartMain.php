@@ -1,4 +1,5 @@
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -33,7 +34,16 @@ try {
     $cartId = $cartStmt->fetchColumn();
 
     if (!$cartId) {
-        throw new Exception("No active cart found for the user.");
+        $cartQuery = "INSERT INTO cart (user_id, paid) VALUES(:user_id, 0)";
+        $cartStmt = $_db->prepare($cartQuery);
+        $cartStmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+        $cartStmt->execute();
+
+        $cartQuery = "SELECT cart_id FROM cart WHERE user_id = :user_id AND paid = 0";
+        $cartStmt = $_db->prepare($cartQuery);
+        $cartStmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+        $cartStmt->execute();
+        $cartId = $cartStmt->fetchColumn();
     }
 
     // Fetch details of books in the cart
@@ -73,18 +83,18 @@ try {
         foreach ($cartItems as $item) {
             $defaultImage = "../images/default.jpg"; // Path to the default image
             $imageSrc = $item['book_photo'] ? "../images/" . htmlspecialchars(trim($item['book_photo'])) : $defaultImage;
-        
+
             // Truncate description to 40 characters and add hover tooltip
             $fullDesc = htmlspecialchars($item['book_desc']);
             $shortDesc = strlen($fullDesc) > 40 ? substr($fullDesc, 0, 37) . '...' : $fullDesc;
-        
+
             // Check if the user already owns this book
             $isOwned = in_array($item['book_id'], $ownedBooks);
-            
+
             // Disable the checkbox and add the 'disabled' class for owned books
             $disabled = $isOwned ? 'disabled' : '';
             $rowClass = $isOwned ? 'disabled-row' : ''; // Add class for styling the disabled row
-            
+
             echo "<tr class='$rowClass'>
                     <td>
                         <input type='checkbox' 
@@ -115,7 +125,7 @@ try {
         echo "</table>";
         echo "<div id='summary-container'>
                 <p id='total-summary'>
-                    Selected: <span id='selected-count'>0</span> out of <span id='total-count'>" . count($cartItems). "</span>
+                    Selected: <span id='selected-count'>0</span> out of <span id='total-count'>" . count($cartItems) . "</span>
                     books | Total Price: $<span id='total-price'>0.00</span>
                 </p>
                 <button id='checkout-button' onclick=\"window.location.href='../payment/paymentpage.php';\">Checkout</button>
@@ -128,11 +138,11 @@ try {
 
 <script>
     // JavaScript for updating selected count and total price
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
         const checkboxes = document.querySelectorAll('.select-book');
         const selectedCountElem = document.getElementById('selected-count');
         const totalPriceElem = document.getElementById('total-price');
-        
+
         checkboxes.forEach(checkbox => {
             checkbox.addEventListener('change', updateTotals);
         });
@@ -167,7 +177,8 @@ try {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        z-index: 1000; /* Ensure it's above all content */
+        z-index: 1000;
+        /* Ensure it's above all content */
     }
 
     #total-summary {
@@ -189,5 +200,4 @@ try {
     #checkout-button:hover {
         background-color: #0056b3;
     }
-
 </style>
