@@ -10,7 +10,7 @@ Web-based project
 - Shopping cart (add/remove/update the cart, checkout)
   - kevin (cart and cart item table)
 
-- Payment (generate pdf and sample transaction record)
+-  Order management, Discount management, Top book rankings
   - low (payment table)
 
 # Steps 
