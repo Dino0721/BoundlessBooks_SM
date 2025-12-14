@@ -1,36 +1,14 @@
 <?php
-
 require '../pageFormat/base.php';
 require '../pageFormat/head.php';
+require_once __DIR__ . '/../app/bootstrap.php';
 
-if (!isset($_SESSION['user_id'])) {
-    temp('info', 'You need to log in to access the profile page.');
-    header('Location: login.php');
-    exit();
-}
-
-// Retrieve user information from the database
-$user_id = $_SESSION['user_id'];
-try {
-    $stmt = $_db->prepare("SELECT * FROM user WHERE user_id = ?");
-    $stmt->execute([$user_id]);
-    $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    if (!$user) {
-        temp('info', 'User not found. Please log in again.');
-        header('Location: login.php');
-        exit();
-    }
-} catch (PDOException $e) {
-    temp('info', 'An error occurred while fetching user data.');
-    header('Location: login.php');
-    exit();
-}
+$auth = new AuthService();
+$user = $auth->getCurrentUser();
 
 if (!$user) {
-    temp('info', 'User not found. Please log in again.');
-    header('Location: login.php');
-    exit();
+    temp('info', 'You need to log in to access the profile page.');
+    redirect('login.php');
 }
 ?>
 
@@ -48,14 +26,13 @@ if (!$user) {
 
     <main>
         <section>
-            <h2>Welcome, <?= htmlspecialchars($user['email']) ?>!</h2>
-            <p><b>Email: </b> <?= htmlspecialchars($user['email']) ?></p>
-            <!-- TODO -->
-            <p><b>Phone Number: </b> <?= htmlspecialchars($user['phone_number'] ?? 'Not provided') ?></p>
-            <p><b>Role: </b> <?= htmlspecialchars($user['admin'] ? 'Admin' : 'User') ?></p>
-            <?php if (!empty($user['profile_photo'])): ?>
+            <h2>Welcome, <?= htmlspecialchars($user->email) ?>!</h2>
+            <p><b>Email: </b> <?= htmlspecialchars($user->email) ?></p>
+            <p><b>Phone Number: </b> <?= htmlspecialchars($user->phone_number ?? 'Not provided') ?></p>
+            <p><b>Role: </b> <?= htmlspecialchars($user->isAdmin() ? 'Admin' : 'User') ?></p>
+            <?php if (!empty($user->profile_photo)): ?>
                 <p><b>Profile Photo:</b><br>
-                    <img src="/uploads/<?= htmlspecialchars($user['profile_photo']) ?>" alt="Profile Photo" style="max-width: 150px;">
+                    <img src="/uploads/<?= htmlspecialchars($user->profile_photo) ?>" alt="Profile Photo" style="max-width: 150px;">
                 </p>
             <?php endif; ?>
         </section>

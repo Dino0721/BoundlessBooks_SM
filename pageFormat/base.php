@@ -2,7 +2,9 @@
 
 // For General Functions Here
 date_default_timezone_set('Asia/Kuala_Lumpur');
-session_start();
+
+// Load modern bootstrap (includes User class and starts session)
+require_once __DIR__ . '/../app/bootstrap.php';
 
 //$_SESSION['user_id']=2;
 //$_SESSION['admin'] = 1;
@@ -225,19 +227,25 @@ function auth(...$roles)
 }
 
 // email function
+// email function
 function get_mail() {
     require_once '../lib/PHPMailer.php';
     require_once '../lib/SMTP.php';
+    
+    // Load config
+    $config = require __DIR__ . '/../app/Config/config.php';
+    $mailConfig = $config['mail'];
 
     $m = new PHPMailer(true);
     $m->isSMTP();
     $m->SMTPAuth = true;
-    $m->Host = 'smtp.gmail.com';
-    $m->Port = 587;
-    $m->Username = 'tequilaguey777@gmail.com';
-    $m->Password = 'dbkh ijmy mjda ohkj';
+    $m->Host = $mailConfig['host'];
+    $m->Port = $mailConfig['port'];
+    $m->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; // Enable TLS encryption
+    $m->Username = $mailConfig['username'];
+    $m->Password = str_replace(' ', '', $mailConfig['password']); // Strip spaces from App Password
     $m->CharSet = 'utf-8';
-    $m->setFrom($m->Username, 'BoundlessBooks');
+    $m->setFrom($mailConfig['username'], $mailConfig['from_name']);
 
     return $m;
 }

@@ -1,12 +1,23 @@
 <?php
 require '../pageFormat/base.php';
 require '../pageFormat/head.php';
+require_once __DIR__ . '/../app/bootstrap.php';
+
+$userModel = new User();
 
 if (is_post()) {
-    $form_type = req('form_type'); // Get the form type to differentiate actions
+    $form_type = req('form_type');
     $_err = [];
 
-    if ($form_type == 'signup') {
+    // CSRF Protection
+    $token = post('csrf_token');
+    if (!SessionManager::verifyCsrfToken($token)) {
+        $_err['general'] = 'Invalid CSRF token. Please refresh and try again.';
+        // Debugging
+        $_err['debug'] = 'Session Token: ' . ($_SESSION['csrf_token'] ?? 'None') . ' | Posted Token: ' . $token;
+    }
+
+    if ($form_type == 'signup' && empty($_err)) {
         // Handle Sign-Up Form Submission
         $email = req('email');
         $password = req('password');
@@ -19,10 +30,8 @@ if (is_post()) {
         } else if (!is_email($email)) {
             $_err['email'] = 'Invalid email format.';
         } else {
-            // Check for duplicate email
-            $stm = $_db->prepare('SELECT COUNT(*) FROM user WHERE email = ?');
-            $stm->execute([$email]);
-            if ($stm->fetchColumn() > 0) {
+            // Check for duplicate email using User model
+            if ($userModel->findByEmail($email)) {
                 $_err['email'] = 'Email already exists.';
             }
         }
@@ -49,11 +58,11 @@ if (is_post()) {
         if (empty($_err)) {
             // OTP generation
             $otp = rand(100000, 999999);
-            $_SESSION['signup_email'] = $email;
-            $_SESSION['signup_password'] = password_hash($password, PASSWORD_DEFAULT);
-            $_SESSION['signup_phone'] = $phone_number;
-            $_SESSION['otp'] = $otp;
-            $_SESSION['otp_expiry'] = time() + 180;
+            SessionManager::set('signup_email', $email);
+            SessionManager::set('signup_password', password_hash($password, PASSWORD_DEFAULT));
+            SessionManager::set('signup_phone', $phone_number);
+            SessionManager::set('otp', $otp);
+            SessionManager::set('otp_expiry', time() + 180);
 
             // Use get_mail() for email setup
             $mail = get_mail();
@@ -82,7 +91,7 @@ if (is_post()) {
 
 <?php
 if (isset($_POST['back_to_login'])) {
-    redirect('login.php'); // Redirect to login.php using the base.php function
+    redirect('login.php');
     exit();
 }
 ?>
@@ -91,6 +100,8 @@ if (isset($_POST['back_to_login'])) {
 <form action="signup.php" method="post" id="sign-up-form">
     <h1>Sign Up</h1>
     <input type="hidden" name="form_type" value="signup">
+    <input type="hidden" name="csrf_token" value="<?= SessionManager::generateCsrfToken() ?>">
+    
     <label for="email">Email</label><br>
     <?= html_text('email', 'maxlength="100"') ?>
     <?= err('email') ?><br>
@@ -110,5 +121,6 @@ if (isset($_POST['back_to_login'])) {
     <button type="submit" name="back_to_login">Back to Login</button>
     <button type="reset">Reset</button>
     <button type="submit">Sign Up</button>
-    <?= isset($_err['general']) ? '<p>' . $_err['general'] . '</p>' : '' ?>
+    <?= isset($_err['general']) ? '<p class="err">' . $_err['general'] . '</p>' : '' ?>
+    <?= isset($_err['debug']) ? '<p class="err" style="font-size: 0.8em; color: gray;">' . $_err['debug'] . '</p>' : '' ?>
 </form>
