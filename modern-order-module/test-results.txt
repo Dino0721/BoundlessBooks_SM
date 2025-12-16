@@ -1,0 +1,62 @@
+ORDER MODULE TEST RESULTS
+═════════════════════════════════════════════════════
+Generated: 2025-12-12 11:31:47
+
+Pass Rate: 100%
+
+─────────────────────────────────────────────────────
+DETAILED RESULTS
+─────────────────────────────────────────────────────
+
+✓ PASS: Valid order creation
+✓ PASS: Invalid book name (empty)
+✓ PASS: Invalid price (negative)
+✓ PASS: Invalid date format
+✓ PASS: Invalid time format
+✓ PASS: Invalid status
+✓ PASS: Valid status: completed
+✓ PASS: Valid status: pending
+✓ PASS: Valid status: cancelled
+✓ PASS: isCompleted returns true
+✓ PASS: isCompleted returns false
+✓ PASS: isPending returns true
+✓ PASS: isPending returns false
+✓ PASS: getPurchaseDateTime returns DateTime
+✓ PASS: DateTime has correct format
+✓ PASS: toArray includes book_name
+✓ PASS: toArray includes book_price
+✓ PASS: toArray includes status
+✓ PASS: toArray includes order_id
+✓ PASS: Order ID formatted correctly
+✓ PASS: Book name escaped correctly
+✓ PASS: Price formatted to 2 decimals
+✓ PASS: Status preserved
+✓ PASS: Filename sanitized: Clean Code
+✓ PASS: Filename sanitized: Refactoring: Improving Design
+✓ PASS: Filename sanitized: Design Patterns (Gang of Four)
+✓ PASS: DateTime parsed successfully
+✓ PASS: Year extracted correctly
+✓ PASS: Month extracted correctly
+✓ PASS: Day extracted correctly
+✓ PASS: Service initialization
+✓ PASS: User has 3 orders
+✓ PASS: First order completed
+✓ PASS: Third order pending
+✓ PASS: User order history workflow
+✓ PASS: Search finds 2 Clean Code orders
+✓ PASS: Found 2 completed orders
+✓ PASS: Order search workflow
+✓ PASS: Total spent calculated correctly
+✓ PASS: Book count is 3
+✓ PASS: Average price calculated correctly
+✓ PASS: Order summary calculation
+✓ PASS: User can download completed order
+✓ PASS: Completed order access
+✓ PASS: User cannot download pending order
+✓ PASS: Order status is pending
+✓ PASS: Pending order handling
+✓ PASS: Pending order identified
+✓ PASS: Completed order identified
+✓ PASS: Cancelled status preserved
+✓ PASS: Failed status preserved
+✓ PASS: Order status transitions
