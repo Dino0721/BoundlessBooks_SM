@@ -1,70 +1,41 @@
 <?php
-include '../pageFormat/base.php';
 
-if (session_status() == PHP_SESSION_NONE) {
-    session_start(); // Start session if not already started
+// Cart "Add to Cart" endpoint (from product catalog).
+// Responsibilities:
+// - Read user and book from request
+// - Delegate business rules to CartService
+// - Return a simple text message to the caller
+
+include '../pageFormat/base.php';
+require_once __DIR__ . '/cartService.php';
+
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
 }
 
-$user_id = $_SESSION['user_id'];
-$book_id = $_GET['book_id'] ?? 0;
+$userId = $_SESSION['user_id'] ?? 0;
+$bookId = isset($_GET['book_id']) ? (int) $_GET['book_id'] : 0;
 
-if (!$user_id || !$book_id) {
-    echo "Invalid request.";
+if (!$userId || !$bookId) {
+    echo 'Invalid request.';
     exit;
 }
 
 try {
-    // Check if the user already owns the book
-    $checkOwnershipSql = "SELECT 1 FROM book_ownership WHERE user_id = :user_id AND book_id = :book_id";
-    $stmt = $_db->prepare($checkOwnershipSql);
-    $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
-    $stmt->bindParam(':book_id', $book_id, PDO::PARAM_INT);
-    $stmt->execute();
+    $result = cart_add_book($_db, (int) $userId, $bookId);
 
-    if ($stmt->rowCount() > 0) {
-        // User already owns the book
-        echo "You already own this item.";
-        exit;
+    switch ($result) {
+        case CartAddResult::ALREADY_OWNED:
+            echo 'You already own this item.';
+            break;
+        case CartAddResult::ALREADY_IN_CART:
+            echo 'Item already in cart.';
+            break;
+        case CartAddResult::ADDED_TO_CART:
+        default:
+            echo 'Item added to cart successfully.';
+            break;
     }
-
-    // Check if the item is already in the cart
-    $checkCartSql = "SELECT 1 FROM cart_item WHERE cart_id IN (SELECT cart_id FROM cart WHERE user_id = :user_id AND paid = 0) AND book_id = :book_id";
-    $stmt = $_db->prepare($checkCartSql);
-    $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
-    $stmt->bindParam(':book_id', $book_id, PDO::PARAM_INT);
-    $stmt->execute();
-
-    if ($stmt->rowCount() > 0) {
-        // Item is already in the cart
-        echo "Item already in cart.";
-        exit;
-    }
-
-    // Fetch the current active cart_id for the user
-    $sql = "SELECT cart_id FROM cart WHERE user_id = :user_id AND paid = 0";
-    $stmt = $_db->prepare($sql);
-    $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
-    $stmt->execute();
-    $cartId = $stmt->fetchColumn();
-
-    if (!$cartId) {
-        // No active cart, create one
-        $sql = "INSERT INTO cart (user_id) VALUES (:user_id)";
-        $stmt = $_db->prepare($sql);
-        $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
-        $stmt->execute();
-        $cartId = $_db->lastInsertId();
-    }
-
-    // Insert the book into the cart_item table
-    $addItemSql = "INSERT INTO cart_item (cart_id, book_id) VALUES (:cart_id, :book_id)";
-    $stmt = $_db->prepare($addItemSql);
-    $stmt->bindParam(':cart_id', $cartId, PDO::PARAM_INT);
-    $stmt->bindParam(':book_id', $book_id, PDO::PARAM_INT);
-    $stmt->execute();
-
-    // Return success message
-    echo "Item added to cart successfully.";
 } catch (PDOException $e) {
-    echo "Error: " . $e->getMessage();
+    echo 'Error: ' . $e->getMessage();
 }

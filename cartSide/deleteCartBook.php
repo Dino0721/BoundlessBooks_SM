@@ -1,65 +1,77 @@
 <?php
+
+// Controller endpoint for "Delete" button in cart table.
+// Uses CartService for data access, keeps this file focused on UI feedback.
+
 require_once '../pageFormat/base.php';
-?>
-<?php
-try {
-    $_db = new PDO("mysql:host=localhost;dbname=ebookDB", "root", "");
-    $_db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    die("Could not connect to the database: " . $e->getMessage());
+require_once __DIR__ . '/cartService.php';
+
+$userId = $_SESSION['user_id'] ?? 0;
+
+if (!$userId) {
+    die('User is not logged in.');
 }
 
-global $_db;
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_book_id'])) {
+    $bookIdToDelete = (int) $_POST['delete_book_id'];
 
-$user_id = $_SESSION['user_id']; // Get the user_id from the session
+    try {
+        // Fetch the book name before deletion for nicer UX
+        $bookStmt = $_db->prepare('SELECT book_name FROM book_item WHERE book_id = :book_id');
+        $bookStmt->bindValue(':book_id', $bookIdToDelete, PDO::PARAM_INT);
+        $bookStmt->execute();
+        $bookName = $bookStmt->fetchColumn();
 
-if (!$user_id) {
-    die("User is not logged in."); // Handle cases where user_id is not set
+        if (!$bookName) {
+            throw new Exception('Book not found.');
+        }
+
+        cart_remove_book($_db, (int) $userId, $bookIdToDelete);
+
+        echo "
+            <script>
+                alert('The book \"$bookName\" has been removed from your cart.');
+                window.location.href = 'cartMain.php';
+            </script>";
+    } catch (Exception $e) {
+        echo 'Error: ' . $e->getMessage();
+    }
 }
+
+/*
+================================================================================
+Documentation snapshot for assignment (Remove from cart – form submit)
+================================================================================
+
+**Before:**
+```php
+require_once '../pageFormat/base.php';
+
+$_db = new PDO(\"mysql:host=localhost;dbname=ebookDB\", \"root\", \"\");
+
+$user_id = $_SESSION['user_id'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_book_id'])) {
     $bookIdToDelete = $_POST['delete_book_id'];
 
-    try {
-        // Fetch the book name before deletion
-        $bookQuery = "SELECT book_name FROM book_item WHERE book_id = :book_id";
-        $bookStmt = $_db->prepare($bookQuery);
-        $bookStmt->bindParam(':book_id', $bookIdToDelete, PDO::PARAM_INT);
-        $bookStmt->execute();
-        $bookName = $bookStmt->fetchColumn(); // Fetch the book name
-
-        if (!$bookName) {
-            throw new Exception("Book not found.");
-        }
-
-        // Prepare the DELETE query to remove the book from the cart_item table
-        $deleteQuery = "
-            DELETE FROM cart_item
-            WHERE cart_id = (
-                SELECT cart_id 
-                FROM cart 
-                WHERE user_id = :user_id AND paid = 0
-            )
-            AND book_id = :book_id";
-        $deleteStmt = $_db->prepare($deleteQuery);
-        $deleteStmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
-        $deleteStmt->bindParam(':book_id', $bookIdToDelete, PDO::PARAM_INT);
-        $deleteStmt->execute();
-
-        // Check if the book was successfully deleted
-        if ($deleteStmt->rowCount() > 0) {
-            // If delete is successful, show the alert with book name and redirect
-            echo "
-            <script>
-                alert('The book \"$bookName\" has been removed from your cart.');
-                window.location.href = 'cartMain.php';  // Redirect to the cart page to show updated cart
-            </script>";
-        } else {
-            throw new Exception("Failed to delete the book. It might not exist in your cart.");
-        }
-    } catch (Exception $e) {
-        // Handle any errors
-        echo "Error: " . $e->getMessage();
-    }
+    // fetch book name...
+    // manual DELETE FROM cart_item WHERE cart_id = (SELECT ...) AND book_id = :book_id
 }
-?>
+```
+
+**After:**
+```php
+require_once '../pageFormat/base.php';
+require_once __DIR__ . '/cartService.php';
+
+$userId = $_SESSION['user_id'] ?? 0;
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_book_id'])) {
+    $bookIdToDelete = (int) $_POST['delete_book_id'];
+
+    // fetch book name for message
+    cart_remove_book($_db, (int) $userId, $bookIdToDelete);
+    // alert + redirect
+}
+```
+*/

@@ -10,7 +10,7 @@
 <?php
 $_title = 'Wish List';
 include '../pageFormat/head.php';
-//include '../cartSide/deleteWishlistBook.php';  
+require_once __DIR__ . '/wishlistService.php';
 
 global $_db;
 
@@ -84,17 +84,9 @@ if (isset($_GET['success']) && isset($_GET['book_id'])) {
     </script>';
 }
 
-// Fetch the book IDs in the user's wishlist
+// Fetch the book IDs in the user's wishlist using the service layer
 try {
-    // Query to get the book_id values for the current user
-    $wishlistQuery = "
-        SELECT book_id
-        FROM wishlist
-        WHERE user_id = :user_id";
-    $wishlistStmt = $_db->prepare($wishlistQuery);
-    $wishlistStmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
-    $wishlistStmt->execute();
-    $bookIds = $wishlistStmt->fetchAll(PDO::FETCH_COLUMN); // Get an array of book IDs for this user
+    $bookIds = wishlist_get_user_book_ids($_db, (int) $user_id);
 
     if (empty($bookIds)) {
         echo "<p>Your wishlist is empty.</p>";
@@ -102,23 +94,7 @@ try {
         createNavItem("../productCatalog/productCatalog.php", "Start Browsing Now");
     } else {
         // Fetch the details of books in the wishlist
-        $bookIdsPlaceholder = implode(',', array_fill(0, count($bookIds), '?')); // Create a placeholder string for the book IDs
-
-        $wishlistItemsQuery = "
-            SELECT 
-                b.book_id,
-                b.book_photo, 
-                b.book_name, 
-                b.book_desc, 
-                b.book_price, 
-                b.book_category, 
-                b.book_status 
-            FROM book_item b
-            WHERE b.book_id IN ($bookIdsPlaceholder)";
-        
-        $wishlistItemsStmt = $_db->prepare($wishlistItemsQuery);
-        $wishlistItemsStmt->execute($bookIds); // Bind the book IDs dynamically
-        $wishlistItems = $wishlistItemsStmt->fetchAll(PDO::FETCH_ASSOC);
+        $wishlistItems = wishlist_get_items($_db, $bookIds);
 
         echo "<h2>Your Wishlist</h2>";
         echo "<table border='1'>
@@ -175,3 +151,58 @@ try {
     echo "Error: " . $e->getMessage();
 }
 ?>
+
+<?php
+/*
+================================================================================
+Documentation snapshot for assignment (Wishlist page data loading)
+================================================================================
+
+**Before:**
+```php
+// Query to get the book_id values for the current user
+$wishlistQuery = "
+    SELECT book_id
+    FROM wishlist
+    WHERE user_id = :user_id";
+$wishlistStmt = $_db->prepare($wishlistQuery);
+$wishlistStmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+$wishlistStmt->execute();
+$bookIds = $wishlistStmt->fetchAll(PDO::FETCH_COLUMN);
+
+if (empty($bookIds)) {
+    echo "<p>Your wishlist is empty.</p>";
+} else {
+    $bookIdsPlaceholder = implode(',', array_fill(0, count($bookIds), '?'));
+
+    $wishlistItemsQuery = "
+        SELECT 
+            b.book_id,
+            b.book_photo, 
+            b.book_name, 
+            b.book_desc, 
+            b.book_price, 
+            b.book_category, 
+            b.book_status 
+        FROM book_item b
+        WHERE b.book_id IN ($bookIdsPlaceholder)";
+        
+    $wishlistItemsStmt = $_db->prepare($wishlistItemsQuery);
+    $wishlistItemsStmt->execute($bookIds);
+    $wishlistItems = $wishlistItemsStmt->fetchAll(PDO::FETCH_ASSOC);
+    // render table...
+}
+```
+
+**After:**
+```php
+$bookIds = wishlist_get_user_book_ids($_db, (int) $user_id);
+
+if (empty($bookIds)) {
+    echo "<p>Your wishlist is empty.</p>";
+} else {
+    $wishlistItems = wishlist_get_items($_db, $bookIds);
+    // render table...
+}
+```
+*/
